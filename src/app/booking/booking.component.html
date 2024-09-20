@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header h3">Booking Details</div>
+        <div class="card-body">
+            <form>
+                <input type="text" class="form-control mb-2" placeholder="Ticket Number">
+                <input type="text" class="form-control" placeholder="Surname">
+            </form>
+        </div>
+        <div class="card-footer text-center" *ngIf="guest">
+            <h1 class="text-primary">{{guest!.Forename}} {{guest!.Surname}}</h1>
+            <h5>{{guest!.Reference}}</h5>
+            <h3>{{roomType!}}</h3>
+            <h5>{{guest!.CheckInDay}} &ndash; {{guest!.CheckOutDay}}</h5>
+            <h5>{{guest!.Dietary || 'No Dietary Requirements'}}</h5>
+            <div [ngSwitch]="room!.Guests.length === 1">
+                <h5 *ngSwitchCase="true">Single Occupant</h5>
+                <div *ngSwitchCase="false">
+                    <small class="text-uppercase text-muted">Sharing With</small>
+                    <div *ngFor="let occupant of room!.Guests">
+                        <h5 *ngIf="occupant.Reference !== guest!.Reference">{{occupant.Forename}} {{occupant.Surname}}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
