@@ -1,5 +1,38 @@
 <div class="container-fluid">
-    <table class="table table-sm table-striped table-bordered tex.t-nowrap my-5">
+    <div class="container">
+        <form [formGroup]="searchForm">
+            <div class="row">
+                <div class="btn-group col-4">
+                    <input type="radio" class="btn-check" formControlName="type" value="All" id="type0" />
+                    <label class="btn btn-secondary" for="type0">All</label>
+                    <input type="radio" class="btn-check" formControlName="type" value="Staff" id="type1" />
+                    <label class="btn btn-secondary" for="type1">Staff</label>
+                    <input type="radio" class="btn-check" formControlName="type" value="Guests" id="type2" />
+                    <label class="btn btn-secondary" for="type2">Guests</label>
+                </div>
+                <div class="col-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control" formControlName="name" placeholder="Search Name">
+                        <button type="button" class="btn btn-outline-secondary"
+                            (click)="searchForm.patchValue({name:''})">
+                            <i class="bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control" formControlName="reference"
+                            placeholder="Search Reference">
+                        <button type="button" class="btn btn-outline-secondary"
+                            (click)="searchForm.patchValue({reference:''})">
+                            <i class="bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table table-sm table-striped table-bordered tex.t-nowrap my-5 align-middle">
         <thead>
             <th class="text-center">Id</th>
             <th class="text-center">Staff</th>
@@ -13,18 +46,27 @@
             <th>Dietary Requirements</th>
         </thead>
         <tbody>
-            <tr *ngFor="let guest of info" [class.table-warning]="guest.AllOk === false">
+            <tr *ngFor="let guest of guests()" [class.table-warning]="guest.AllOk === false">
                 <td class="text-center"><a [name]="guest.GuestId">{{guest.GuestId}}</a></td>
-                <td [class.text-primary]="guest.Staff" class="text-center">{{guest.Staff ? 'Yes' : 'No'}}</td>
-                <td [class.text-primary]="guest.Staff">{{guest.FullName}}</td>
+                <td class="text-center">{{guest.Staff ? 'Yes' : 'No'}}</td>
+                <td>{{guest.FullName}}</td>
                 <td>{{guest.TicketId}}</td>
                 <td>{{guest.TicketType}}</td>
                 <td [ngClass]="color(guest.RoomTypeOk)">{{guest.RoomType}}</td>
                 <td [ngClass]="color(guest.RoomConfigOk)">{{guest.RoomConfig}}</td>
                 <td [ngClass]="color(guest.ReservationOk)" class="text-center">{{guest.Reservation}}</td>
                 <td [ngClass]="color(guest.SharingWithOk)">
-                    <a [href]="'guestinfo#' + guest.SharingWithId" [class.link-dark]="guest.SharingWithOk"
-                        [class.link-danger]="!guest.SharingWithOk">{{guest.SharingWith}}</a>
+                    <div [ngSwitch]="guest.SharingWithId != null">
+                        <div *ngSwitchCase="true">
+                            <button type="button" class="btn btn-sm btn-secondary me-2">
+                                <i class=" bi-link-45deg"></i>
+                            </button>
+                            <span [class.text-danger]="!guest.SharingWithOk">{{guest.SharingWith}}</span>
+                        </div>
+                        <div *ngSwitchCase="false">
+                            <span *ngIf="!guest.SharingWithOk" class="text-muted text-uppercase">UNSPECIFIED</span>
+                        </div>
+                    </div>
                 </td>
                 <td [ngClass]="color(guest.DietaryInfoOk)">{{guest.DietaryInfo}}</td>
             </tr>

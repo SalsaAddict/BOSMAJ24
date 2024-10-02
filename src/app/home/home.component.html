@@ -1,6 +1,7 @@
 <div class="container" *ngIf="info">
+    <div class="text-center h3 mb-5">BOS Majorca 2024 - Room Allocations</div>
     <div>
-        <table class="table table-bordered table-striped table-sm text-nowrap align-middle my-5">
+        <table class="table table-bordered table-striped table-sm text-nowrap align-middle">
             <thead>
                 <tr class="table-primary">
                     <th rowspan="2">Room Type</th>
@@ -28,60 +29,66 @@
                 </tr>
             </tbody>
         </table>
+        <br>
     </div>
     <div *ngFor="let allocation of info.Allocations">
         <div *ngFor="let stay of allocation.Stays">
             <div *ngFor="let roomType of stay.RoomTypes">
                 <div *ngFor="let configuration of roomType.Configurations">
-                    <table class="table table-bordered table-striped table-sm text-nowrap align-middle mb-5"
-                        *ngIf="configuration.Rooms?.length">
-                        <thead>
-                            <tr class="table-primary">
-                                <th class="h4" colspan="5">{{allocation.GuestType}}</th>
-                            </tr>
-                            <tr class="table-primary">
-                                <th class="h3" colspan="5">
-                                    <span>{{roomType.RoomType}}</span>
-                                    <span>&nbsp;&bullet;&nbsp;</span>
-                                    <span>{{configuration.Configuration}}</span>
-                                    <span>&nbsp;&bullet;&nbsp;</span>
-                                    <span>{{stay.Stay}} ({{stay.Nights}} Nights)</span>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>Forename</th>
-                                <th>Surname</th>
-                                <th>Dietary Requirements</th>
-                                <th>Reference</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let room of configuration.Rooms; let i=index;">
-                                <th class="text-center">{{i + 1}}</th>
-                                <td>
-                                    <p class="m-0 text-capitalize" *ngFor="let guest of room.Guests">
-                                        {{guest.Forename | titlecase}}
-                                    </p>
-                                </td>
-                                <td>
-                                    <p class="m-0 text-capitalize" *ngFor="let guest of room.Guests">
-                                        {{(guest.Surname || '&ndash;') | titlecase }}
-                                    </p>
-                                </td>
-                                <td>
-                                    <p class="m-0" *ngFor="let guest of room.Guests">{{guest.DietaryInfo || '&ndash;'}}
-                                    </p>
-                                </td>
-                                <td>
-                                    <p class="m-0" *ngFor="let guest of room.Guests">{{guest.Reference || '&ndash;'}}
-                                    </p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div *ngIf="configuration.Rooms?.length">
+                        <table class="table table-bordered table-striped table-sm text-nowrap align-middle">
+                            <thead>
+                                <tr class="table-primary">
+                                    <th class="h4" colspan="5">{{allocation.GuestType}}</th>
+                                </tr>
+                                <tr class="table-primary">
+                                    <th class="h3" colspan="5">
+                                        <span>{{roomType.RoomType}}</span>
+                                        <span>&nbsp;&bullet;&nbsp;</span>
+                                        <span>{{configuration.Configuration}}</span>
+                                        <span>&nbsp;&bullet;&nbsp;</span>
+                                        <span>{{stay.Stay}} ({{stay.Nights}} Nights)</span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Forename</th>
+                                    <th>Surname</th>
+                                    <th>Dietary Requirements</th>
+                                    <th>Reference</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let room of configuration.Rooms; let i=index;">
+                                    <th class="text-center">{{i + 1}}</th>
+                                    <td>
+                                        <p class="m-0 text-capitalize" *ngFor="let guest of room.Guests">
+                                            {{guest.Forename | titlecase}}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p class="m-0 text-capitalize" *ngFor="let guest of room.Guests">
+                                            {{(guest.Surname || '&ndash;') | titlecase }}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p class="m-0" *ngFor="let guest of room.Guests">{{guest.DietaryInfo ||
+                                            '&ndash;'}}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p class="m-0" *ngFor="let guest of room.Guests">{{guest.Reference ||
+                                            '&ndash;'}}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <p class="text-muted text-uppercase text-center">End of Report</p>
 </div>

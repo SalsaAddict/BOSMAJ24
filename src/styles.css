@@ -1,8 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
-html {
-  font-size: 0.75rem;
+body {
+  padding-top: 70px;
 }
 @media print {
+  html {
+    font-size: 0.75rem;
+  }
   @page {
     size: A4 portrait;
     margin: 0.25in;
