@@ -1,20 +1,23 @@
-import { CommonModule, JsonPipe } from '@angular/common';
-import { HttpClient, JsonpClientBackend } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { HotelInfo } from '../hotel-info';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { IHotelInfo } from '../hotel-info';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, JsonPipe],
+  imports: [CommonModule],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  encapsulation: ViewEncapsulation.None
 })
 export class HomeComponent {
-  constructor(private readonly http: HttpClient) {
-    this.http.get<HotelInfo>('/assets/hotel.json').subscribe((data) => {
-      this.hotel = data;
-    });
+  constructor(http: HttpClient, auth: AuthService) {
+    auth
+      .openEncryptedJsonFile<IHotelInfo>('/assets/hotelinfo.txt')
+      .then((info) => {
+        this.info = info;
+      });
   }
-  hotel?: HotelInfo;
+  info?: IHotelInfo;
 }

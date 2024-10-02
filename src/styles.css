@@ -2,3 +2,9 @@
 html {
   font-size: 0.75rem;
 }
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0.25in;
+  }
+}

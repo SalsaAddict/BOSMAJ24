@@ -1,0 +1,33 @@
+<div class="container-fluid">
+    <table class="table table-sm table-striped table-bordered tex.t-nowrap my-5">
+        <thead>
+            <th class="text-center">Id</th>
+            <th class="text-center">Staff</th>
+            <th>Guest Name</th>
+            <th>Ticket Number</th>
+            <th>Ticket Type</th>
+            <th>Room Type</th>
+            <th>Configuration</th>
+            <th class="text-center">Reservation</th>
+            <th>Sharing With</th>
+            <th>Dietary Requirements</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let guest of info" [class.table-warning]="guest.AllOk === false">
+                <td class="text-center"><a [name]="guest.GuestId">{{guest.GuestId}}</a></td>
+                <td [class.text-primary]="guest.Staff" class="text-center">{{guest.Staff ? 'Yes' : 'No'}}</td>
+                <td [class.text-primary]="guest.Staff">{{guest.FullName}}</td>
+                <td>{{guest.TicketId}}</td>
+                <td>{{guest.TicketType}}</td>
+                <td [ngClass]="color(guest.RoomTypeOk)">{{guest.RoomType}}</td>
+                <td [ngClass]="color(guest.RoomConfigOk)">{{guest.RoomConfig}}</td>
+                <td [ngClass]="color(guest.ReservationOk)" class="text-center">{{guest.Reservation}}</td>
+                <td [ngClass]="color(guest.SharingWithOk)">
+                    <a [href]="'guestinfo#' + guest.SharingWithId" [class.link-dark]="guest.SharingWithOk"
+                        [class.link-danger]="!guest.SharingWithOk">{{guest.SharingWith}}</a>
+                </td>
+                <td [ngClass]="color(guest.DietaryInfoOk)">{{guest.DietaryInfo}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

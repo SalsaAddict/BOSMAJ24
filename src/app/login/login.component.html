@@ -1,0 +1,17 @@
+<div class="container">
+    <form (ngSubmit)="login()">
+        <div class="card my-5">
+            <div class="card-header h3">BOS Majorca 2024</div>
+            <div class="card-body">
+                <div *ngIf="invalid" class="alert alert-danger" role="alert">
+                    Invalid password
+                </div>
+                <input type="password" name="password" [(ngModel)]="auth.password" class="form-control"
+                    placeholder="Password">
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-outline-primary">Login</button>
+            </div>
+        </div>
+    </form>
+</div>
