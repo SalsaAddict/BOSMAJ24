@@ -6,10 +6,12 @@ import {
   FormControl
 } from '@angular/forms';
 import { IGuestInfo } from '../guest-info';
-import { CommonModule, JsonPipe, TitleCasePipe } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { AuthService } from '../auth.service';
+import { GuestDetailComponent } from '../guest-detail/guest-detail.component';
 
 type GuestType = 'All' | 'Staff' | 'Guests';
+type ReviewType = 'All' | 'Question' | 'Problem';
 
 @Component({
   selector: 'app-guest-info',
@@ -18,8 +20,8 @@ type GuestType = 'All' | 'Staff' | 'Guests';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    JsonPipe,
-    TitleCasePipe
+    TitleCasePipe,
+    GuestDetailComponent
   ],
   templateUrl: './guest-info.component.html',
   encapsulation: ViewEncapsulation.None
@@ -32,7 +34,7 @@ export class GuestInfoComponent {
         this.info = info;
       });
   }
-  info?: IGuestInfo[];
+  info: IGuestInfo[] = [];
   color(value?: boolean) {
     if (value === true) return;
     if (value === false) return 'text-danger';
@@ -43,11 +45,26 @@ export class GuestInfoComponent {
     type: new FormControl<GuestType>('All'),
     name: new FormControl<string>(''),
     reference: new FormControl<string>(''),
-    linkId: new FormControl<number | undefined>(undefined)
+    linkId: new FormControl<number | undefined>(undefined),
+    review: new FormControl<ReviewType>('All')
   });
+
+  link(guestId: number) {
+    this.searchForm.patchValue({ linkId: guestId });
+  }
+  unlink() {
+    this.searchForm.patchValue({ linkId: undefined });
+  }
 
   guests(): IGuestInfo[] {
     if (this.info?.length) {
+      if (this.searchForm.value.linkId) {
+        return this.info.filter((guest) => {
+          if (guest.GuestId === this.searchForm.value.linkId) return true;
+          if (guest.SharingWithId === this.searchForm.value.linkId) return true;
+          return false;
+        });
+      }
       return this.info
         .filter((guest) => {
           if (this.searchForm.value.type === 'Staff' && !guest.Staff)
@@ -86,6 +103,16 @@ export class GuestInfoComponent {
             return true;
           }
           return false;
+        })
+        .filter((guest) => {
+          switch (this.searchForm.value.review!) {
+            case 'All':
+              return true;
+            case 'Question':
+              return guest.HasQuestion;
+            case 'Problem':
+              return guest.HasProblem;
+          }
         });
     } else return [];
   }
