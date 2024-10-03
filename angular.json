@@ -94,8 +94,14 @@
           "options": {
             "buildTarget": "BOSMAJ24:build"
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "b200812c-23ee-4329-a732-c904d9fdd82d"
   }
 }
