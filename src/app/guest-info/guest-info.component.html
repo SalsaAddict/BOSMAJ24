@@ -4,11 +4,20 @@
             <div class="row">
                 <div class="btn-group col-3">
                     <input type="radio" class="btn-check" formControlName="type" value="All" id="type0" />
-                    <label class="btn btn-outline-secondary" for="type0">All</label>
+                    <label class="btn btn-outline-secondary" for="type0">
+                        All
+                        <span class="badge text-bg-secondary">{{total()}}</span>
+                    </label>
                     <input type="radio" class="btn-check" formControlName="type" value="Staff" id="type1" />
-                    <label class="btn btn-outline-secondary" for="type1">Staff</label>
+                    <label class="btn btn-outline-secondary" for="type1">
+                        Staff
+                        <span class="badge text-bg-secondary">{{total(true)}}</span>
+                    </label>
                     <input type="radio" class="btn-check" formControlName="type" value="Guests" id="type2" />
-                    <label class="btn btn-outline-secondary" for="type2">Guests</label>
+                    <label class="btn btn-outline-secondary" for="type2">
+                        Guests
+                        <span class="badge text-bg-secondary">{{total(false)}}</span>
+                    </label>
                 </div>
                 <div class="col-3">
                     <div class="input-group">
@@ -49,7 +58,12 @@
             <button type="button" class="btn btn-secondary" (click)="unlink()">Show All</button>
         </div>
     </div>
-    <table class="table table-sm table-striped table-bordered tex.t-nowrap my-5 align-middle">
+    <p [ngSwitch]="filtered" class="text-center text-uppercase text-muted small my-3">
+        {{count}} guests
+        <span *ngSwitchCase="true">(filtered)</span>
+        <span *ngSwitchCase="false">total</span>
+    </p>
+    <table class="table table-sm table-striped table-bordered tex.t-nowrap align-middle">
         <thead>
             <th class="text-center">Id</th>
             <th class="text-center">Staff</th>

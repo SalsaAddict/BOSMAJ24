@@ -116,4 +116,16 @@ export class GuestInfoComponent {
         });
     } else return [];
   }
+  total(staff?: boolean) {
+    if (staff === undefined) return this.info.length;
+    return this.info.filter((guest) => {
+      return guest.Staff == staff;
+    }).length;
+  }
+  get count() {
+    return this.guests().length;
+  }
+  get filtered() {
+    return this.count !== this.info.length;
+  }
 }
