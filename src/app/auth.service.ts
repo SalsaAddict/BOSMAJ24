@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import CryptoJS from 'crypto-js';
@@ -55,7 +55,14 @@ export class AuthService implements CanActivate {
   }
   async openEncryptedJsonFile<T>(filename: string): Promise<T> {
     let encrypted = await firstValueFrom(
-      this.http.get(filename, { responseType: 'text' })
+      this.http.get(filename, {
+        responseType: 'text',
+        headers: new HttpHeaders({
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+          Expires: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        })
+      })
     );
     let data = this.decrypt(encrypted, this.password!);
     return JSON.parse(data);

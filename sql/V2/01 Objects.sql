@@ -3,10 +3,11 @@ GO
 SET NOCOUNT ON
 GO
 DROP PROCEDURE IF EXISTS [ExportGuestInfo]
+DROP PROCEDURE IF EXISTS [Allocate]
 DROP VIEW IF EXISTS [GuestInfo]
 DROP VIEW IF EXISTS [RoomCount]
 DROP VIEW IF EXISTS [Finance]
-DROP PROCEDURE IF EXISTS [ImportWebSales]
+DROP PROCEDURE IF EXISTS [Import]
 DROP VIEW IF EXISTS [Rooms]
 DROP VIEW IF EXISTS [OneRoomPerGuest]
 DROP TABLE IF EXISTS [Room]
@@ -144,6 +145,7 @@ CREATE TABLE [Guest] (
 	[DietaryInfo] NVARCHAR(255) NULL,
 	[Staff] BIT NOT NULL,
 	CONSTRAINT [PK_Guest] PRIMARY KEY CLUSTERED ([Id]),
+	CONSTRAINT [UQ_Guest_FullName] UNIQUE ([FullName]),
 	CONSTRAINT [FK_Guest_WebSales] FOREIGN KEY ([TicketId], [FullName]) REFERENCES [WebSales] ([Ticket_number], [Guest_name]),
 	CONSTRAINT [FK_Guest_Stay] FOREIGN KEY ([CheckInDate], [CheckOutDate]) REFERENCES [Stay] ([CheckInDate], [CheckOutDate]),
 	CONSTRAINT [FK_Guest_Diet] FOREIGN KEY ([DietaryInfo]) REFERENCES [Diet] ([DietaryInfo]),
@@ -151,8 +153,6 @@ CREATE TABLE [Guest] (
 )
 GO
 CREATE UNIQUE INDEX [IX_Guest_TicketId] ON [Guest] ([TicketId]) WHERE [TicketId] IS NOT NULL
-GO
-CREATE UNIQUE INDEX [IX_Guest_FullName] ON [Guest] ([FullName]) WHERE [Staff] = 1
 GO
 CREATE TABLE [RoomType] (
 	[Id] NCHAR(1) NOT NULL,
@@ -240,11 +240,14 @@ FROM [dbo].[Guest] g
 	JOIN [dbo].[Room] r ON g.[Id] IN (r.[GuestId1], r.[GuestId2])
 GROUP BY r.[Id], r.[RoomTypeId], r.[RoomConfigId]
 GO
-CREATE PROCEDURE [ImportWebSales]
+CREATE PROCEDURE [Import]
 AS
 BEGIN
 	SET NOCOUNT ON
 
+	DELETE [Room]
+	DELETE [Guest]
+	DELETE [Artist]
 	DELETE [WebSales]
 
 	BULK INSERT [dbo].[Artist]
@@ -305,6 +308,9 @@ BEGIN
 		[Staff] = CASE
 				WHEN s.[Guest_name] = N'Pierre Henry' AND s.[Ticket_number] = N'2WK6-SXTG-FVC1P' THEN 1
 				WHEN s.[Guest_name] = N'Qiosen Feng' AND s.[Ticket_number] = N'2WK6-QWBS-4J31Q' THEN 1
+				WHEN s.[Guest_name] = N'Sandra Vega' AND s.[Ticket_number] = N'2WRN-PRZD-2QK1P' THEN 1
+				WHEN s.[Guest_name] = N'Sandra Vega' AND s.[Ticket_number] = N'2WRN-PRZD-2QK1P' THEN 1
+				WHEN s.[Guest_name] = N'Edward Gomez Quiroga' AND s.[Ticket_number] = N'2WRN-QZL2-MMB1P' THEN 1
 				ELSE 0
 			END
 	FROM [WebSales] s
