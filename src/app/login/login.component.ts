@@ -21,7 +21,7 @@ export class LoginComponent {
   ) {}
   login() {
     this.http
-      .get('/assets/password.txt', { responseType: 'text' })
+      .get('assets/password.txt', { responseType: 'text' })
       .subscribe((encrypted) => {
         if (this.auth.password) {
           try {
@@ -32,7 +32,7 @@ export class LoginComponent {
             if (this.auth.password === decrypted) {
               this.invalid = false;
               this.auth.password = decrypted;
-              this.router.navigate(['hotelinfo']);
+              this.router.navigate(['guestinfo']);
             } else this.invalid = true;
           } catch {
             this.invalid = true;

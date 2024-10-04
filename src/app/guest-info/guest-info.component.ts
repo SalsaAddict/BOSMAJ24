@@ -29,7 +29,7 @@ type ReviewType = 'All' | 'Question' | 'Problem';
 export class GuestInfoComponent {
   constructor(auth: AuthService) {
     auth
-      .openEncryptedJsonFile<IGuestInfo[]>('/assets/guestinfo.txt')
+      .openEncryptedJsonFile<IGuestInfo[]>('assets/guestinfo.txt')
       .then((info) => {
         this.info = info;
       });

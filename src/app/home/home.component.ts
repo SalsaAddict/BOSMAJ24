@@ -14,7 +14,7 @@ import { AuthService } from '../auth.service';
 export class HomeComponent {
   constructor(http: HttpClient, auth: AuthService) {
     auth
-      .openEncryptedJsonFile<IHotelInfo>('/assets/hotelinfo.txt')
+      .openEncryptedJsonFile<IHotelInfo>('assets/hotelinfo.txt')
       .then((info) => {
         this.info = info;
       });
