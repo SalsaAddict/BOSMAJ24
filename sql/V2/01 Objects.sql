@@ -246,7 +246,11 @@ BEGIN
 	SET NOCOUNT ON
 
 	DELETE [Room]
+	DBCC CHECKIDENT ([Room], reseed, 1)
+	DBCC CHECKIDENT ([Room], reseed)
 	DELETE [Guest]
+	DBCC CHECKIDENT ([Guest], reseed, 1)
+	DBCC CHECKIDENT ([Guest], reseed)
 	DELETE [Artist]
 	DELETE [WebSales]
 

@@ -12,6 +12,8 @@ BEGIN
 	END
 
 	DELETE [Room]
+	DBCC CHECKIDENT ([Room], reseed, 1)
+	DBCC CHECKIDENT ([Room], reseed)
 
 	INSERT INTO [Room] (
 		[RoomTypeId],
