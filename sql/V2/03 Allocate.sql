@@ -107,9 +107,9 @@ BEGIN
 			
 				(N'2WDQ-Z3HL-SXF1P', NULL, N'J', N'T'),
 				(N'2VPW-TMLV-JPQ1P', NULL, N'S', N'T'),
-				(N'2WR9-ZN8M-PL71P', NULL, N'S', N'T'),
 				(N'2WQW-TD19-KKQ1P', NULL, N'S', N'T'),
-				(N'2WQQ-Q3QC-4J01P', NULL, N'j', N'T')
+				(N'2WQQ-Q3QC-4J01P', NULL, N'J', N'T'),
+				(N'2WRX-DH75-35F1P', NULL, N'S', N'T') -- Waiting for Nived Subbarayan
 			) shr ([TicketId1], [TicketId2], [RoomTypeId], [RoomConfigId])
 		JOIN [RoomType] rt ON shr.[RoomTypeId] = rt.[Id]
 		JOIN [RoomConfig] rc ON shr.[RoomConfigId] = rc.[Id]

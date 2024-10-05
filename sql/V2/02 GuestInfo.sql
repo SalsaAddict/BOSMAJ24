@@ -33,7 +33,6 @@ SELECT TOP 100 PERCENT
 	[SharingWith] = g2.[FullName],
 	[SharingWithId] = g2.[Id],
 	[SharingWithOk] = CONVERT(BIT, CASE
-			WHEN g.[Staff] = 1 THEN 1
 			WHEN rt.[Description] = N'Single Room' AND r.[GuestId2] IS NULL THEN 1
 			WHEN rt.[Description] != N'Single Room' AND r.[GuestId2] IS NULL THEN 0
 			WHEN w.[Order_number] = w2.[Order_number] THEN 1
@@ -41,6 +40,7 @@ SELECT TOP 100 PERCENT
 			WHEN CHARINDEX(REPLACE(g2.[FullName], N' ', N''), REPLACE(w.[Sharing_info_2], N' ', '')) > 0 THEN 1
 			WHEN CHARINDEX(REPLACE(g.[FullName], N' ', N''), REPLACE(w2.[Sharing_info_1], N' ', '')) > 0 THEN 1
 			WHEN CHARINDEX(REPLACE(g.[FullName], N' ', N''), REPLACE(w2.[Sharing_info_2], N' ', '')) > 0 THEN 1
+			WHEN g.[Staff] = 1 THEN 1
 			ELSE NULL
 		END),
 	[DietaryInfo] = g.[DietaryInfo],
