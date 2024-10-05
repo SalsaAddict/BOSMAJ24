@@ -11,7 +11,7 @@ import { AuthService } from '../auth.service';
 import { GuestDetailComponent } from '../guest-detail/guest-detail.component';
 
 type GuestType = 'All' | 'Staff' | 'Guests';
-type ReviewType = 'All' | 'Question' | 'Problem';
+type ReviewType = 'All' | 'Question' | 'Problem' | 'Random';
 
 @Component({
   selector: 'app-guest-info',
@@ -112,6 +112,8 @@ export class GuestInfoComponent {
               return guest.HasQuestion;
             case 'Problem':
               return guest.HasProblem;
+            case 'Random':
+              return guest.Random;
           }
         });
     } else return [];

@@ -12,4 +12,5 @@ export class GuestDetailComponent {
   @Input() condition!: boolean | undefined;
   @Input() value!: string | undefined;
   @Input() normalize = false;
+  @Input() nullClass = 'bi-question-octagon-fill text-warning';
 }

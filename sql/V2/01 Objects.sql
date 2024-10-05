@@ -208,6 +208,7 @@ CREATE TABLE [Room] (
 	[RoomConfigId] NCHAR(1) NOT NULL,
 	[GuestId1] INT NOT NULL,
 	[GuestId2] INT NULL,
+	[Random] BIT,
 	CONSTRAINT [PK_Room] PRIMARY KEY CLUSTERED ([Id]),
 	CONSTRAINT [FK_Room_RoomTypeConfig] FOREIGN KEY ([RoomTypeId], [RoomConfigId]) REFERENCES [RoomTypeConfig] ([RoomTypeId], [RoomConfigId]),
 	CONSTRAINT [FK_Room_Guest1] FOREIGN KEY ([GuestId1]) REFERENCES [Guest] ([Id]),
@@ -235,10 +236,11 @@ SELECT
 	[CheckOutDate] = MAX(g.[CheckOutDate]),
 	[Occupants] = COUNT_BIG(*),
 	[GuestId1] = MIN(r.[GuestId1]),
-	[GuestId2] = MIN(r.[GuestId2])
+	[GuestId2] = MIN(r.[GuestId2]),
+	[Random] = r.[Random]
 FROM [dbo].[Guest] g
 	JOIN [dbo].[Room] r ON g.[Id] IN (r.[GuestId1], r.[GuestId2])
-GROUP BY r.[Id], r.[RoomTypeId], r.[RoomConfigId]
+GROUP BY r.[Id], r.[RoomTypeId], r.[RoomConfigId], r.[Random]
 GO
 CREATE PROCEDURE [Import]
 AS

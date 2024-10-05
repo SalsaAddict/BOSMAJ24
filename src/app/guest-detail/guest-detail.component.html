@@ -6,7 +6,7 @@
         </span>
         <i class="bi-check-circle text-success" *ngSwitchCase="true"></i>
         <i class="bi-exclamation-triangle-fill text-danger" *ngSwitchCase="false"></i>
-        <i class="bi-question-octagon-fill text-warning" *ngSwitchCase="undefined"></i>
+        <i [ngClass]="nullClass" *ngSwitchCase="undefined"></i>
     </div>
     <div *ngSwitchCase="false">
         <div *ngIf="!condition">

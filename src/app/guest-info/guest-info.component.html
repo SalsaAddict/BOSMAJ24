@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="container" [ngSwitch]="!searchForm.value.linkId">
         <form [formGroup]="searchForm" *ngSwitchCase="true">
-            <div class="row">
+            <div class="row text-nowrap">
                 <div class="btn-group col-3">
                     <input type="radio" class="btn-check" formControlName="type" value="All" id="type0" />
                     <label class="btn btn-outline-secondary" for="type0">
@@ -51,6 +51,11 @@
                         Problem
                         <i class="bi-exclamation-triangle-fill text-danger"></i>
                     </label>
+                    <input type="radio" class="btn-check" formControlName="review" value="Random" id="review3" />
+                    <label class="btn btn-outline-secondary" for="review3">
+                        Random
+                        <i class="bi-question-diamond-fill text-primary"></i>
+                    </label>
                 </div>
             </div>
         </form>
@@ -63,7 +68,7 @@
         <span *ngSwitchCase="true">(filtered)</span>
         <span *ngSwitchCase="false">total</span>
     </p>
-    <table class="table table-sm table-striped table-bordered tex.t-nowrap align-middle">
+    <table class="table table-sm table-striped table-bordered text-nowrap align-middle">
         <thead>
             <th class="text-center">Id</th>
             <th class="text-center">Staff</th>
@@ -73,8 +78,8 @@
             <th>Dietary Requirements</th>
             <th>Room Type</th>
             <th>Configuration</th>
-            <th class="text-center">Reservation</th>
-            <th colspan="2">Sharing With</th>
+            <th>Reservation</th>
+            <th colspan="3">Sharing With</th>
         </thead>
         <tbody>
             <tr *ngFor="let guest of guests()">
@@ -97,6 +102,9 @@
                 </td>
                 <td>
                     <app-guest-detail [condition]="guest.ReservationOk" [value]="guest.Reservation"></app-guest-detail>
+                </td>
+                <td class="text-center" style="width: 0;">
+                    <i class="bi-question-diamond-fill text-primary" *ngIf="guest.Random"></i>
                 </td>
                 <td>
                     <app-guest-detail [condition]="guest.SharingWithOk" [value]="guest.SharingWith"

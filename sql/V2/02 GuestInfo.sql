@@ -1,3 +1,7 @@
+USE [Advent_PAH]
+GO
+SET NOCOUNT ON
+GO
 DROP PROCEDURE IF EXISTS [ExportGuestInfo]
 DROP VIEW IF EXISTS [GuestInfo]
 GO
@@ -41,6 +45,7 @@ SELECT TOP 100 PERCENT
 			WHEN CHARINDEX(REPLACE(g.[FullName], N' ', N''), REPLACE(w2.[Sharing_info_1], N' ', '')) > 0 THEN 1
 			WHEN CHARINDEX(REPLACE(g.[FullName], N' ', N''), REPLACE(w2.[Sharing_info_2], N' ', '')) > 0 THEN 1
 			WHEN g.[Staff] = 1 THEN 1
+			WHEN r.[Random] = 1 THEN 1
 			ELSE NULL
 		END),
 	[DietaryInfo] = g.[DietaryInfo],
@@ -48,7 +53,8 @@ SELECT TOP 100 PERCENT
 			WHEN g.[DietaryInfo] IS NULL THEN 1
 			WHEN g.[DietaryInfo] = w.[Dietary_info] THEN 1
 			ELSE NULL
-		END)
+		END),
+	[Random] = r.[Random]
 FROM [dbo].[Guest] g
 	JOIN [dbo].[Stay] gs ON g.[CheckInDate] = gs.[CheckInDate] AND g.[CheckOutDate] = gs.[CheckOutDate]
 	JOIN [dbo].[Rooms] r ON g.[Id] IN (r.[GuestId1], r.[GuestId2])

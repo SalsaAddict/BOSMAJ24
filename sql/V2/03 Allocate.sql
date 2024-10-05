@@ -1,3 +1,7 @@
+USE [Advent_PAH]
+GO
+SET NOCOUNT ON
+GO
 DROP PROCEDURE IF EXISTS [Allocate]
 GO
 CREATE PROCEDURE [Allocate]
@@ -19,14 +23,16 @@ BEGIN
 		[RoomTypeId],
 		[RoomConfigId],
 		[GuestId1],
-		[GuestId2]
+		[GuestId2],
+		[Random]
 	)
 	-- ***** ARTISTS *****
 	SELECT
 		[RoomTypeId] = a.[RoomTypeId], 
 		[RoomConfigId] = a.[RoomConfigId],
 		[GuestId1] = g1.[Id],
-		[GuestId2] = g2.[Id]
+		[GuestId2] = g2.[Id],
+		[Random] = CONVERT(BIT, 0)
 	FROM [Artist] a
 		LEFT JOIN [Guest] g1 ON a.[Forename1] + ISNULL(N' ' + a.[Surname1], N'') = g1.[FullName]
 		LEFT JOIN [Guest] g2 ON a.[Forename2] + ISNULL(N' ' + a.[Surname2], N'') = g2.[FullName]
@@ -36,7 +42,8 @@ BEGIN
 		[RoomTypeId] = N'U',
 		[RoomConfigId] = N'D',
 		[GuestId1] = g.[Id],
-		[GuestId2] = NULL
+		[GuestId2] = NULL,
+		[Random] = CONVERT(BIT, 0)
 	FROM [WebSalesTicketsPerOrder] c
 		JOIN [WebSales] s ON c.[Order_number] = s.[Order_number]
 		JOIN [Guest] g ON s.[Ticket_number] = g.[TicketId]
@@ -53,7 +60,8 @@ BEGIN
 				N'2WL0-M7NZ-S09'
 			) THEN 'D' ELSE 'T' END,
 		[GuestId1] = MIN(CASE WHEN os.[Order_sequence] = 1 THEN g.[Id] END),
-		[GuestId2] = MIN(CASE WHEN os.[Order_sequence] = 2 THEN g.[Id] END)
+		[GuestId2] = MIN(CASE WHEN os.[Order_sequence] = 2 THEN g.[Id] END),
+		[Random] = CONVERT(BIT, 0)
 	FROM [WebSalesTicketsPerOrder] c
 		JOIN [WebSalesOrderSequence] os ON c.[Order_number] = os.[Order_number]
 		JOIN [Guest] g ON os.[Ticket_number] = g.[TicketId]
@@ -72,7 +80,8 @@ BEGIN
 				N'2WL0-L6N3-SV71P'
 			) THEN 'D' ELSE 'T' END,
 		[GuestId1] = g1.[Id],
-		[GuestId2] = g2.[Id]
+		[GuestId2] = g2.[Id],
+		[Random] = CONVERT(BIT, 0)
 	FROM [WebSales] s1
 		JOIN [Guest] g1 ON s1.[Ticket_number] = g1.[TicketId]
 		JOIN [WebSales] s2 ON LEFT(s1.[Ticket_type], CHARINDEX(N':', s1.[Ticket_type])) = LEFT(s2.[Ticket_type], CHARINDEX(N':', s2.[Ticket_type]))
@@ -92,7 +101,8 @@ BEGIN
 		[RoomTypeId] = rt.[Id],
 		[RoomConfigId] = rc.[Id],
 		[GuestId1] = g1.[Id],
-		[GuestId2] = g2.[Id]
+		[GuestId2] = g2.[Id],
+		[Random] = CONVERT(BIT, 1)
 	FROM (VALUES
 				(N'2VPS-PF42-W7B1P', N'2VPP-J3GQ-7501P', N'J', N'T'),
 				(N'2WM4-TG2D-BKT1P', N'2W99-P0Z1-JFL1P', N'S', N'T'),
@@ -121,13 +131,16 @@ BEGIN
 		[RoomTypeId] = N'S',
 		[RoomConfigId] = N'T',
 		[GuestId1] = g1.[Id],
-		[GuestId2] = g2.[Id]
+		[GuestId2] = g2.[Id],
+		[Random] = CONVERT(BIT, 0)
 	FROM [Guest] g1, [Guest] g2
 	WHERE g1.[TicketId] = N'2WQD-JT1M-34G1P'
 		AND g2.[TicketId] IS NULL AND g2.[FullName] = N'Lola Gill'
 
 	UPDATE r
-	SET [GuestId2] = g2.[Id]
+	SET
+		[GuestId2] = g2.[Id],
+		[Random] = CONVERT(BIT, 0)
 	FROM (VALUES
 				(N'Sirran Elves', N'2W8T-748N-45B1P'),
 				(N'Thalia Padilla', N'2WQH-313N-D7W1P'),
