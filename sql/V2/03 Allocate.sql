@@ -114,12 +114,10 @@ BEGIN
 				(N'2WQC-0F28-HXJ1P', N'2WH0-F8J3-MTQ1P', N'S', N'T'),
 				(N'2WNJ-8T6K-4BC1P', N'2WQB-B4QB-WSR1P', N'S', N'T'),
 				(N'2WR9-ZVB2-2RL1P', N'2WC9-TBLZ-D221P', N'S', N'T'),
+				(N'2WQW-TD19-KKQ1P', N'2WRX-DH75-35F1P', N'S', N'T'),
+				(N'2WDQ-Z3HL-SXF1P', N'2WQQ-Q3QC-4J01P', N'J', N'T'),
 			
-				(N'2WDQ-Z3HL-SXF1P', NULL, N'J', N'T'),
-				(N'2VPW-TMLV-JPQ1P', NULL, N'S', N'T'),
-				(N'2WQW-TD19-KKQ1P', NULL, N'S', N'T'),
-				(N'2WQQ-Q3QC-4J01P', NULL, N'J', N'T'),
-				(N'2WRX-DH75-35F1P', NULL, N'S', N'T') -- Waiting for Nived Subbarayan
+				(N'2VPW-TMLV-JPQ1P', NULL, N'S', N'T')
 			) shr ([TicketId1], [TicketId2], [RoomTypeId], [RoomConfigId])
 		JOIN [RoomType] rt ON shr.[RoomTypeId] = rt.[Id]
 		JOIN [RoomConfig] rc ON shr.[RoomConfigId] = rc.[Id]

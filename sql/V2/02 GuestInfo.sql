@@ -52,6 +52,8 @@ SELECT TOP 100 PERCENT
 	[DietaryInfoOk] = CONVERT(BIT, CASE
 			WHEN g.[DietaryInfo] IS NULL THEN 1
 			WHEN g.[DietaryInfo] = w.[Dietary_info] THEN 1
+			WHEN CHARINDEX(REPLACE(g.[DietaryInfo], N'&', N'and'), w.[Sharing_info_1]) > 0 THEN 1
+			WHEN CHARINDEX(REPLACE(g.[DietaryInfo], N'&', N'and'), w.[Sharing_info_2]) > 0 THEN 1
 			ELSE NULL
 		END),
 	[Random] = r.[Random]
