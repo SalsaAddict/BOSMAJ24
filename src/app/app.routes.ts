@@ -3,6 +3,7 @@ import { HomeComponent } from './home/home.component';
 import { GuestInfoComponent } from './guest-info/guest-info.component';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './auth.service';
+import { TimetableComponent } from './timetable/timetable.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -15,6 +16,10 @@ export const routes: Routes = [
     path: 'guestinfo',
     component: GuestInfoComponent,
     canActivate: [AuthService]
+  },
+  {
+    path: 'timetable',
+    component: TimetableComponent
   },
   { path: '**', redirectTo: '/login' }
 ];
