@@ -40,25 +40,25 @@
             </tr>
             <tr>
                 <th>10:00 - 10:50</th>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
                 <td rowspan="3"></td>
             </tr>
             <tr>
                 <th>11:00 - 11:50</th>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
             </tr>
             <tr>
                 <th>12:00 - 12:50</th>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
             </tr>
             <tr>
                 <th>13:00 - 14:00</th>
@@ -68,44 +68,46 @@
                 <th>14:00 - 15:00</th>
             </tr>
         </tbody>
-        <tbody [ngSwitch]="options.value.day">
+        <tbody [ngSwitch]="options.value.day === 'Thu'">
             <tr>
                 <th>15:00 - 15:50</th>
-                <td *ngSwitchCase="'Thu'" rowspan="5">Closed</td>
-                <td *ngSwitchDefault></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td *ngSwitchCase="true" rowspan="5">Closed</td>
+                <td *ngSwitchCase="false" class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
                 <td rowspan="4" class="table-info">Pool Party</td>
             </tr>
             <tr>
                 <th>16:00 - 16:50</th>
-                <td *ngSwitchDefault></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td *ngSwitchCase="false" class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
             </tr>
             <tr>
                 <th>17:00 - 17:50</th>
-                <td *ngSwitchDefault></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td *ngSwitchCase="false" class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
             </tr>
             <tr>
                 <th>18:00 - 18:50</th>
-                <td *ngSwitchDefault></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td *ngSwitchCase="false" class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
+                <td class="table-warning">Workshops</td>
             </tr>
-            <tr>
+            <tr [ngSwitch]="options.value.day">
                 <th>19:00 - 20:00</th>
+                <td *ngIf="options.value.day != 'Thu'">Closed</td>
                 <td>Closed</td>
                 <td>Closed</td>
-                <td *ngSwitchCase="'Fri'" class="table-warning">Shows</td>
-                <td *ngSwitchCase="'Sat'" class="table-warning">Shows</td>
-                <td *ngSwitchCase="'Sun'" class="table-warning">Jack &amp; Jill</td>
+                <td *ngSwitchCase="'Thu'">Closed</td>
+                <td *ngSwitchCase="'Fri'" class="table-danger">Shows</td>
+                <td *ngSwitchCase="'Sat'" class="table-danger">Shows</td>
+                <td *ngSwitchCase="'Sun'" class="table-danger">Jack &amp; Jill</td>
                 <td></td>
             </tr>
         </tbody>
@@ -133,9 +135,11 @@
             </tr>
             <tr>
                 <th>01:00 - 02:00</th>
+                <td rowspan="2">Closed</td>
             </tr>
             <tr>
                 <th>02:00 - 03:00</th>
+                <td>Closed</td>
             </tr>
         </tbody>
     </table>
