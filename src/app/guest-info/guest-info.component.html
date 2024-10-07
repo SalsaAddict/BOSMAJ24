@@ -53,7 +53,7 @@
                     </label>
                     <input type="radio" class="btn-check" formControlName="review" value="Random" id="review3" />
                     <label class="btn btn-outline-secondary" for="review3">
-                        Random
+                        Unconfirmed
                         <i class="bi-question-diamond-fill text-primary"></i>
                     </label>
                 </div>
@@ -103,8 +103,9 @@
                 <td>
                     <app-guest-detail [condition]="guest.ReservationOk" [value]="guest.Reservation"></app-guest-detail>
                 </td>
-                <td class="text-center" style="width: 0;">
-                    <i class="bi-question-diamond-fill text-primary" *ngIf="guest.Random"></i>
+                <td class="text-center" style="width: 0;" [ngSwitch]="guest.Confirmed">
+                    <i class="bi-check-circle text-success" *ngSwitchCase="true"></i>
+                    <i class="bi-question-diamond-fill text-primary" *ngSwitchCase="false"></i>
                 </td>
                 <td>
                     <app-guest-detail [condition]="guest.SharingWithOk" [value]="guest.SharingWith"

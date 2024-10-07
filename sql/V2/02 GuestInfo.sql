@@ -16,6 +16,7 @@ SELECT TOP 100 PERCENT
 	[TicketType] = w.[Ticket_type],
 	[RoomType] = rt.[Description],
 	[RoomTypeOk] = CONVERT(BIT, CASE
+			WHEN r.[Confirmed] = 1 THEN 1
 			WHEN g.[Staff] = 1 AND rt.[Description] = N'Standard Room' THEN 1
 			WHEN g.[Staff] = 1 AND rt.[Description] != N'Standard Room' THEN NULL
 			WHEN g.[Staff] = 0 AND w.[Ticket_type] LIKE N'SINGLE ROOM: %' AND rt.[Description] = N'Single Room' THEN 1
@@ -25,6 +26,7 @@ SELECT TOP 100 PERCENT
 		END),
 	[RoomConfig] = rc.[Description],
 	[RoomConfigOk] = CONVERT(BIT, ISNULL(CASE rc.[Description] WHEN N'2 Single Beds' THEN 1 WHEN N'1 Double Bed' THEN CASE
+			WHEN r.[Confirmed] = 1 THEN 1
 			WHEN rt.[Description] = N'Single Room' THEN 1
 			ELSE CASE
 					WHEN r.[Staff] = 1 THEN 1
@@ -36,18 +38,7 @@ SELECT TOP 100 PERCENT
 	[ReservationOk] = CONVERT(BIT, CASE WHEN gs.[Description] = rs.[Description] THEN 1 ELSE 0 END),
 	[SharingWith] = g2.[FullName],
 	[SharingWithId] = g2.[Id],
-	[SharingWithOk] = CONVERT(BIT, CASE
-			WHEN rt.[Description] = N'Single Room' AND r.[GuestId2] IS NULL THEN 1
-			WHEN rt.[Description] != N'Single Room' AND r.[GuestId2] IS NULL THEN 0
-			WHEN w.[Order_number] = w2.[Order_number] THEN 1
-			WHEN CHARINDEX(REPLACE(g2.[FullName], N' ', N''), REPLACE(w.[Sharing_info_1], N' ', '')) > 0 THEN 1
-			WHEN CHARINDEX(REPLACE(g2.[FullName], N' ', N''), REPLACE(w.[Sharing_info_2], N' ', '')) > 0 THEN 1
-			WHEN CHARINDEX(REPLACE(g.[FullName], N' ', N''), REPLACE(w2.[Sharing_info_1], N' ', '')) > 0 THEN 1
-			WHEN CHARINDEX(REPLACE(g.[FullName], N' ', N''), REPLACE(w2.[Sharing_info_2], N' ', '')) > 0 THEN 1
-			WHEN g.[Staff] = 1 THEN 1
-			WHEN r.[Random] = 1 THEN 1
-			ELSE NULL
-		END),
+	[SharingWithOk] = CONVERT(BIT, CASE	WHEN rt.[Description] != N'Single Room' AND r.[GuestId2] IS NULL THEN 0 ELSE 1 END),
 	[DietaryInfo] = g.[DietaryInfo],
 	[DietaryInfoOk] = CONVERT(BIT, CASE
 			WHEN g.[DietaryInfo] IS NULL THEN 1
@@ -56,7 +47,7 @@ SELECT TOP 100 PERCENT
 			WHEN CHARINDEX(REPLACE(g.[DietaryInfo], N'&', N'and'), w.[Sharing_info_2]) > 0 THEN 1
 			ELSE NULL
 		END),
-	[Random] = r.[Random]
+	[Confirmed] = r.[Confirmed]
 FROM [dbo].[Guest] g
 	JOIN [dbo].[Stay] gs ON g.[CheckInDate] = gs.[CheckInDate] AND g.[CheckOutDate] = gs.[CheckOutDate]
 	JOIN [dbo].[Rooms] r ON g.[Id] IN (r.[GuestId1], r.[GuestId2])

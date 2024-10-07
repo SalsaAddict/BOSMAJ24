@@ -113,7 +113,7 @@ export class GuestInfoComponent {
             case 'Problem':
               return guest.HasProblem;
             case 'Random':
-              return guest.Random;
+              return !guest.Confirmed;
           }
         });
     } else return [];

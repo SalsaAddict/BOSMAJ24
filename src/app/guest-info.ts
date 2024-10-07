@@ -16,7 +16,7 @@ export interface IGuestInfo {
   SharingWithOk?: boolean;
   DietaryInfo?: string;
   DietaryInfoOk?: boolean;
-  Random: boolean;
+  Confirmed: boolean;
   HasQuestion: boolean;
   HasProblem: boolean;
 }

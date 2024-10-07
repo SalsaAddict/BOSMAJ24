@@ -6,11 +6,12 @@ DROP PROCEDURE IF EXISTS [ExportGuestInfo]
 DROP PROCEDURE IF EXISTS [Allocate]
 DROP VIEW IF EXISTS [GuestInfo]
 DROP VIEW IF EXISTS [RoomCount]
-DROP VIEW IF EXISTS [Finance]
 DROP PROCEDURE IF EXISTS [Import]
 DROP VIEW IF EXISTS [Rooms]
 DROP VIEW IF EXISTS [OneRoomPerGuest]
 DROP TABLE IF EXISTS [Room]
+DROP TABLE IF EXISTS [Match]
+DROP TABLE IF EXISTS [Concession]
 DROP TABLE IF EXISTS [RoomTypeConfig]
 DROP TABLE IF EXISTS [RoomConfig]
 DROP TABLE IF EXISTS [RoomType]
@@ -18,7 +19,6 @@ DROP TABLE IF EXISTS [Guest]
 DROP TABLE IF EXISTS [GuestType]
 DROP TABLE IF EXISTS [Diet]
 DROP TABLE IF EXISTS [Stay]
-DROP TABLE IF EXISTS [Artist]
 DROP VIEW IF EXISTS [WebSalesOrderSequence]
 DROP VIEW IF EXISTS [WebSalesTicketsPerOrder]
 DROP VIEW IF EXISTS [WebSalesNames]
@@ -86,15 +86,6 @@ SELECT
 		),
 	[Ticket_number]
 FROM [dbo].[WebSales]
-GO
-CREATE TABLE [Artist] (
-	[Forename1] NVARCHAR(127) NOT NULL,
-	[Surname1] NVARCHAR(127) NULL,
-	[Forename2] NVARCHAR(127) NULL,
-	[Surname2] NVARCHAR(127) NULL,
-	[RoomTypeId] NCHAR(1) NOT NULL,
-	[RoomConfigId] NCHAR(1) NOT NULL
-)
 GO
 CREATE TABLE [Stay] (
 	[CheckInDate] DATE NOT NULL,
@@ -202,13 +193,33 @@ VALUES
 	(N'J', N'D'),
 	(N'J', N'T')
 GO
+CREATE TABLE [Concession] (
+	[Forename] NVARCHAR(127) NOT NULL,
+	[Surname] NVARCHAR(127) NULL,
+	[CheckInDate] DATE NOT NULL,
+	[CheckOutDate] DATE NOT NULL,
+	[Staff] BIT NOT NULL
+)
+GO
+CREATE TABLE [Match] (
+	[Guest1] NVARCHAR(255) NOT NULL,
+	[Guest2] NVARCHAR(255) NULL,
+	[RoomTypeId] NCHAR(1) NOT NULL,
+	[RoomConfigId] NCHAR(1) NOT NULL,
+	[Confirmed] BIT NOT NULL,
+	CONSTRAINT [FK_Match_Guest_1] FOREIGN KEY ([Guest1]) REFERENCES [Guest] ([FullName]),
+	CONSTRAINT [FK_Match_Guest_2] FOREIGN KEY ([Guest2]) REFERENCES [Guest] ([FullName]),
+	CONSTRAINT [FK_Match_RoomType] FOREIGN KEY ([RoomTypeId]) REFERENCES [RoomType] ([Id]),
+	CONSTRAINT [FK_Match_RoomConfig] FOREIGN KEY ([RoomConfigId]) REFERENCES [RoomConfig] ([Id])
+)
+GO
 CREATE TABLE [Room] (
 	[Id] INT NOT NULL IDENTITY (1, 1),
 	[RoomTypeId] NCHAR(1) NOT NULL,
 	[RoomConfigId] NCHAR(1) NOT NULL,
 	[GuestId1] INT NOT NULL,
 	[GuestId2] INT NULL,
-	[Random] BIT,
+	[Confirmed] BIT,
 	CONSTRAINT [PK_Room] PRIMARY KEY CLUSTERED ([Id]),
 	CONSTRAINT [FK_Room_RoomTypeConfig] FOREIGN KEY ([RoomTypeId], [RoomConfigId]) REFERENCES [RoomTypeConfig] ([RoomTypeId], [RoomConfigId]),
 	CONSTRAINT [FK_Room_Guest1] FOREIGN KEY ([GuestId1]) REFERENCES [Guest] ([Id]),
@@ -237,10 +248,10 @@ SELECT
 	[Occupants] = COUNT_BIG(*),
 	[GuestId1] = MIN(r.[GuestId1]),
 	[GuestId2] = MIN(r.[GuestId2]),
-	[Random] = r.[Random]
+	[Confirmed] = r.[Confirmed]
 FROM [dbo].[Guest] g
 	JOIN [dbo].[Room] r ON g.[Id] IN (r.[GuestId1], r.[GuestId2])
-GROUP BY r.[Id], r.[RoomTypeId], r.[RoomConfigId], r.[Random]
+GROUP BY r.[Id], r.[RoomTypeId], r.[RoomConfigId], r.[Confirmed]
 GO
 CREATE PROCEDURE [Import]
 AS
@@ -250,19 +261,12 @@ BEGIN
 	DELETE [Room]
 	DBCC CHECKIDENT ([Room], reseed, 1)
 	DBCC CHECKIDENT ([Room], reseed)
+	DELETE [Match]
 	DELETE [Guest]
 	DBCC CHECKIDENT ([Guest], reseed, 1)
 	DBCC CHECKIDENT ([Guest], reseed)
-	DELETE [Artist]
+	DELETE [Concession]
 	DELETE [WebSales]
-
-	BULK INSERT [dbo].[Artist]
-	FROM 'D:\tmp\artists.csv'
-	WITH (
-			DATAFILETYPE = 'widechar',
-			FORMAT = 'CSV',
-			FIRSTROW = 2
-		)
 
 	BULK INSERT [dbo].[WebSales]
 	FROM 'D:\tmp\websales.csv'
@@ -277,24 +281,26 @@ BEGIN
 	FROM [WebSales] s
 		JOIN [WebSalesNames] n ON s.[Ticket_number] = n.[Ticket_number]
 
-	-- Pierre Henry
-	UPDATE [WebSales]
-	SET [Ticket_type] = N'SINGLE ROOM: Thurs to Mon'
-	WHERE [Ticket_number] = N'2WK6-SXTG-FVC1P'
+	BULK INSERT [dbo].[Concession]
+	FROM 'D:\tmp\concessions.csv'
+	WITH (
+			DATAFILETYPE = 'widechar',
+			FORMAT = 'CSV',
+			FIRSTROW = 2
+		)
+
+	BULK INSERT [dbo].[Match]
+	FROM 'D:\tmp\match.csv'
+	WITH (
+			DATAFILETYPE = 'widechar',
+			FORMAT = 'CSV',
+			FIRSTROW = 2
+		)
 
 	-- Dominic Pisano & Kally Woodgate
 	UPDATE [WebSales]
 	SET [Guest_name] = N'Kally Woodgate', [Sharing_info_1] = N'Dominic Pisano'
 	WHERE [Ticket_number] = N'2WJ6-Z9NB-81Q1P'
-
-	INSERT INTO [Guest] ([Forename], [Surname], [CheckInDate], [CheckOutDate], [Staff])
-	SELECT [Forename1], [Surname1], N'2024-10-31', N'2024-11-04', 1
-	FROM [Artist]
-	UNION ALL
-	SELECT [Forename2], [Surname2], N'2024-10-31', N'2024-11-04', 1
-	FROM [Artist]
-	WHERE [Forename2] IS NOT NULL
-	ORDER BY 1, 2
 
 	INSERT INTO [Guest] ([TicketId], [Forename], [Surname], [CheckInDate], [CheckOutDate], [DietaryInfo], [Staff])
 	SELECT
@@ -311,71 +317,24 @@ BEGIN
 				WHEN s.[Ticket_number] = N'2WD3-7JHN-86F1Q' THEN N'Gluten & Dairy Free' -- See [Sharing_info_2]
 				ELSE ISNULL(d.[DietaryInfo], td.[DietaryInfo])
 			END,
-		[Staff] = CASE
-				WHEN s.[Guest_name] = N'Pierre Henry' AND s.[Ticket_number] = N'2WK6-SXTG-FVC1P' THEN 1
-				WHEN s.[Guest_name] = N'Qiosen Feng' AND s.[Ticket_number] = N'2WK6-QWBS-4J31Q' THEN 1
-				WHEN s.[Guest_name] = N'Sandra Vega' AND s.[Ticket_number] = N'2WRN-PRZD-2QK1P' THEN 1
-				WHEN s.[Guest_name] = N'Sandra Vega' AND s.[Ticket_number] = N'2WRN-PRZD-2QK1P' THEN 1
-				WHEN s.[Guest_name] = N'Edward Gomez Quiroga' AND s.[Ticket_number] = N'2WRN-QZL2-MMB1P' THEN 1
-				ELSE 0
-			END
+		[Staff] = CONVERT(BIT, 0)
 	FROM [WebSales] s
 		JOIN [WebSalesNames] n ON s.[Ticket_number] = n.[Ticket_number]
 		OUTER APPLY (VALUES (NULLIF(TRIM(s.[Dietary_info]), N'No'))) td ([DietaryInfo])
 		LEFT JOIN [Diet] d ON td.[DietaryInfo] = d.[DietaryInfo]
 
+	MERGE
+	INTO [Guest] t
+	USING [Concession] s
+	ON t.[FullName] = s.[Forename] + ISNULL(N' ' + s.[Surname], N'')
+	WHEN MATCHED THEN UPDATE SET
+		[CheckInDate] = s.[CheckInDate],
+		[CheckOutDate] = s.[CheckOutDate],
+		[Staff] = s.[Staff]
+	WHEN NOT MATCHED BY TARGET THEN
+		INSERT ([Forename], [Surname], [CheckInDate], [CheckOutDate], [Staff])
+		VALUES (s.[Forename], s.[Surname], s.[CheckInDate], s.[CheckOutDate], s.[Staff]);
+
 	RETURN
 END
-GO
-CREATE VIEW [Finance]
-WITH SCHEMABINDING
-AS
-SELECT TOP 100 PERCENT
-	[Category] = gt.[Description],
-	[Type] = rt.[Description],
-	[Configuration] = rc.[Description],
-	[Stay] = per.[Description],
-	[Total Rooms] = COUNT(DISTINCT r.[RoomId]),
-	[Total Guests] = COUNT(DISTINCT g.[Id]),
-	[Web Sales Revenue] = SUM(ISNULL(s.[Ticket_revenue], 0))
-	--[Profit] = SUM(ISNULL(s.[Ticket_revenue], 0)) - (rt.[PricePerPersonPerNight] * rt.[MinPeople] * per.[Nights] * COUNT(DISTINCT r.[RoomId]))
-FROM [dbo].[Rooms] r
-	JOIN [dbo].[GuestType] gt ON r.[Staff] = gt.[Staff]
-	JOIN [dbo].[RoomType] rt ON r.[RoomTypeId] = rt.[Id]
-	JOIN [dbo].[RoomConfig] rc ON r.[RoomConfigId] = rc.[Id]
-	JOIN [dbo].[Stay] per ON r.[CheckInDate] = per.[CheckInDate] AND r.[CheckOutDate] = per.[CheckOutDate]
-	LEFT JOIN [dbo].[Guest] g ON g.[Id] IN (r.[GuestId1], r.[GuestId2])
-	LEFT JOIN [dbo].[WebSales] s ON g.[TicketId] = s.[Ticket_number]
-GROUP BY
-	r.[Staff], gt.[Description],
-	rt.[Sort], rt.[Description], rt.[PricePerPersonPerNight], rt.[MinPeople],
-	rc.[Sort], rc.[Description],
-	per.[Nights], per.[Description]
-ORDER BY
-	r.[Staff] DESC,
-	rt.[Sort], rt.[Description],
-	rc.[Sort], rc.[Description],
-	per.[Nights] DESC
-GO
-CREATE VIEW [RoomCount]
-WITH SCHEMABINDING
-AS
-SELECT TOP 100 PERCENT
-	[Type] = rt.[Description],
-	[Configuration] = rc.[Description],
-	[ThuA] = COUNT(CASE WHEN per.[Description] = N'Thu-Mon' AND r.[Staff] = 1 THEN 1 END),
-	[ThuG] = COUNT(CASE WHEN per.[Description] = N'Thu-Mon' AND r.[Staff] = 0 THEN 1 END),
-	[FriA] = COUNT(CASE WHEN per.[Description] = N'Fri-Mon' AND r.[Staff] = 1 THEN 1 END),
-	[FriG] = COUNT(CASE WHEN per.[Description] = N'Fri-Mon' AND r.[Staff] = 0 THEN 1 END),
-	[Total] = COUNT(*)
-FROM [dbo].[Rooms] r
-	JOIN [dbo].[RoomType] rt ON r.[RoomTypeId] = rt.[Id]
-	JOIN [dbo].[RoomConfig] rc ON r.[RoomConfigId] = rc.[Id]
-	JOIN [dbo].[Stay] per ON r.[CheckInDate] = per.[CheckInDate] AND r.[CheckOutDate] = per.[CheckOutDate]
-GROUP BY
-	rt.[Sort], rt.[Description],
-	rc.[Sort], rc.[Description]
-ORDER BY
-	rt.[Sort], rt.[Description],
-	rc.[Sort], rc.[Description]
 GO
