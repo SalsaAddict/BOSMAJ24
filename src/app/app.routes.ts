@@ -19,7 +19,8 @@ export const routes: Routes = [
   },
   {
     path: 'timetable',
-    component: TimetableComponent
+    component: TimetableComponent,
+    canActivate: [AuthService]
   },
   { path: '**', redirectTo: '/login' }
 ];
