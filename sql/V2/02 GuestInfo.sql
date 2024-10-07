@@ -38,7 +38,7 @@ SELECT TOP 100 PERCENT
 	[ReservationOk] = CONVERT(BIT, CASE WHEN gs.[Description] = rs.[Description] THEN 1 ELSE 0 END),
 	[SharingWith] = g2.[FullName],
 	[SharingWithId] = g2.[Id],
-	[SharingWithOk] = CONVERT(BIT, CASE	WHEN rt.[Description] != N'Single Room' AND r.[GuestId2] IS NULL THEN 0 ELSE 1 END),
+	[SharingWithOk] = CONVERT(BIT, CASE	WHEN rt.[Description] != N'Single Room' AND r.[GuestId2] IS NULL AND r.[Confirmed] = 0 THEN 0 ELSE 1 END),
 	[DietaryInfo] = g.[DietaryInfo],
 	[DietaryInfoOk] = CONVERT(BIT, CASE
 			WHEN g.[DietaryInfo] IS NULL THEN 1
