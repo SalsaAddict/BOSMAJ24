@@ -3,11 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ViewEncapsulation } from '@angular/core';
 import { IHotelInfo } from '../hotel-info';
 import { AuthService } from '../auth.service';
+import { NameComponent } from '../name/name.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NameComponent],
   templateUrl: './home.component.html',
   encapsulation: ViewEncapsulation.None
 })

@@ -16,6 +16,8 @@ BEGIN
 							[GuestsThuMon] = COUNT(CASE WHEN r.[Staff] = 0 AND per.[Description] = N'Thu-Mon' THEN 1 ELSE NULL END),
 							[StaffFriMon] = COUNT(CASE WHEN r.[Staff] = 1 AND per.[Description] = N'Fri-Mon' THEN 1 ELSE NULL END),
 							[GuestsFriMon] = COUNT(CASE WHEN r.[Staff] = 0 AND per.[Description] = N'Fri-Mon' THEN 1 ELSE NULL END),
+							[StaffSatMon] = COUNT(CASE WHEN r.[Staff] = 1 AND per.[Description] = N'Sat-Mon' THEN 1 ELSE NULL END),
+							[GuestsSatMon] = COUNT(CASE WHEN r.[Staff] = 0 AND per.[Description] = N'Sat-Mon' THEN 1 ELSE NULL END),
 							[Total] = COUNT(*)
 						FROM [Rooms] r
 							JOIN [RoomType] rt ON r.[RoomTypeId] = rt.[Id]

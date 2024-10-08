@@ -7,11 +7,11 @@ SELECT
 	s.[Someone_to_share_with],
 	s.[Sharing_info_1],
 	s.[Sharing_info_2]
-FROM [Guest] g
-	JOIN [WebSales] s ON g.[TicketId] = s.[Ticket_number]
+FROM [Advent_PAH]..[Guest] g
+	JOIN [Advent_PAH]..[WebSales] s ON g.[TicketId] = s.[Ticket_number]
 WHERE [Id] NOT IN (
-		SELECT [GuestId1] FROM [Room] UNION
-		SELECT [GuestId2] FROM [Room] WHERE [GuestId2] IS NOT NULL
+		SELECT [GuestId1] FROM [Advent_PAH]..[Room] UNION
+		SELECT [GuestId2] FROM [Advent_PAH]..[Room] WHERE [GuestId2] IS NOT NULL
 	)
 ORDER BY s.[Coupon], s.[Guest_name]
 

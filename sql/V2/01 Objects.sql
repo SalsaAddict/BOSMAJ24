@@ -90,14 +90,17 @@ CREATE TABLE [Stay] (
 	[CheckOutDate] DATE NOT NULL,
 	[Description] AS LEFT(DATENAME(weekday, [CheckInDate]), 3) + N'-' + LEFT(DATENAME(weekday, [CheckOutDate]), 3),
 	[Nights] AS DATEDIFF(day, [CheckInDate], [CheckOutDate]),
+	[AllowReservation] BIT NOT NULL,
 	CONSTRAINT [PK_Period] PRIMARY KEY CLUSTERED ([CheckInDate], [CheckOutDate]),
 	CONSTRAINT [CK_Period_CheckOutDate] CHECK ([CheckOutDate] >= [CheckInDate])
 )
 GO
-INSERT INTO [Stay] ([CheckInDate], [CheckOutDate])
+INSERT INTO [Stay] ([CheckInDate], [CheckOutDate], [AllowReservation])
 VALUES
-	(N'2024-10-31', N'2024-11-04'),
-	(N'2024-11-01', N'2024-11-04')
+	(N'2024-10-31', N'2024-11-04', 1),
+	(N'2024-11-01', N'2024-11-04', 1),
+	(N'2024-11-02', N'2024-11-04', 0),
+	(N'2024-11-01', N'2024-11-03', 0)
 GO
 CREATE TABLE [Diet] (
 	[DietaryInfo] NVARCHAR(255) NOT NULL,
