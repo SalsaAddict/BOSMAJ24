@@ -132,7 +132,9 @@ CREATE TABLE [Guest] (
 	[Surname] NVARCHAR(127) NULL,
 	[FullName] AS CONVERT(NVARCHAR(255), [Forename] + ISNULL(N' ' + [Surname], N'')) PERSISTED,
 	[CheckInDate] DATE NOT NULL,
+	[FlightInTime] TIME NULL,
 	[CheckOutDate] DATE NOT NULL,
+	[FlightOutTime] TIME NULL,
 	[DietaryInfo] NVARCHAR(255) NULL,
 	[Staff] BIT NOT NULL,
 	CONSTRAINT [PK_Guest] PRIMARY KEY CLUSTERED ([Id]),
@@ -197,7 +199,9 @@ CREATE TABLE [Concession] (
 	[Forename] NVARCHAR(127) NOT NULL,
 	[Surname] NVARCHAR(127) NULL,
 	[CheckInDate] DATE NOT NULL,
+	[FlightInTime] TIME NULL,
 	[CheckOutDate] DATE NOT NULL,
+	[FlightOutTime] TIME NULL,
 	[Staff] BIT NOT NULL
 )
 GO
@@ -329,11 +333,13 @@ BEGIN
 	ON t.[FullName] = s.[Forename] + ISNULL(N' ' + s.[Surname], N'')
 	WHEN MATCHED THEN UPDATE SET
 		[CheckInDate] = s.[CheckInDate],
+		[FlightInTime] = s.[FlightInTime],
 		[CheckOutDate] = s.[CheckOutDate],
+		[FlightOutTime] = s.[FlightOutTime],
 		[Staff] = s.[Staff]
 	WHEN NOT MATCHED BY TARGET THEN
-		INSERT ([Forename], [Surname], [CheckInDate], [CheckOutDate], [Staff])
-		VALUES (s.[Forename], s.[Surname], s.[CheckInDate], s.[CheckOutDate], s.[Staff]);
+		INSERT ([Forename], [Surname], [CheckInDate], [FlightInTime], [CheckOutDate], [FlightOutTime], [Staff])
+		VALUES (s.[Forename], s.[Surname], s.[CheckInDate], s.[FlightInTime], s.[CheckOutDate], s.[FlightOutTime], s.[Staff]);
 
 	RETURN
 END

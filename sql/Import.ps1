@@ -1,5 +1,5 @@
 Import-Excel "websales.xlsx" -StartRow 3 -NoHeader | Export-Csv "websales.csv" -NoTypeInformation -Encoding unicode
-Import-Excel "concessions.xlsx" -AsText CheckInDate, CheckOutDate | Export-Csv "concessions.csv" -NoTypeInformation -Encoding unicode
+Import-Excel "concessions.xlsx" -AsText CheckInDate, FlightInTime, CheckOutDate, FlightOutTime | Export-Csv "concessions.csv" -NoTypeInformation -Encoding unicode
 Import-Excel "match.xlsx" | Export-Csv "match.csv" -NoTypeInformation -Encoding unicode
 Copy-Item "websales.csv" "\\fred.whitespace.co.uk\D$\tmp"
 Copy-Item "concessions.csv" "\\fred.whitespace.co.uk\D$\tmp"
