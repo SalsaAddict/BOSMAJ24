@@ -1,5 +1,3 @@
-USE [Advent_PAH]
-GO
 SET NOCOUNT ON
 GO
 DROP PROCEDURE IF EXISTS [ExportGuestInfo]

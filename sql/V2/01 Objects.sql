@@ -1,5 +1,3 @@
-USE [Advent_PAH]
-GO
 SET NOCOUNT ON
 GO
 DROP PROCEDURE IF EXISTS [ExportGuestInfo]
@@ -11,7 +9,7 @@ DROP VIEW IF EXISTS [Rooms]
 DROP VIEW IF EXISTS [OneRoomPerGuest]
 DROP TABLE IF EXISTS [Room]
 DROP TABLE IF EXISTS [Match]
-DROP TABLE IF EXISTS [Concession]
+DROP TABLE IF EXISTS [Staging]
 DROP TABLE IF EXISTS [RoomTypeConfig]
 DROP TABLE IF EXISTS [RoomConfig]
 DROP TABLE IF EXISTS [RoomType]
@@ -195,9 +193,10 @@ VALUES
 	(N'J', N'D'),
 	(N'J', N'T')
 GO
-CREATE TABLE [Concession] (
+CREATE TABLE [Staging] (
 	[Forename] NVARCHAR(127) NOT NULL,
 	[Surname] NVARCHAR(127) NULL,
+	[DietaryInfo] NVARCHAR(255) NULL,
 	[CheckInDate] DATE NOT NULL,
 	[FlightInTime] TIME NULL,
 	[CheckOutDate] DATE NOT NULL,
@@ -269,7 +268,7 @@ BEGIN
 	DELETE [Guest]
 	DBCC CHECKIDENT ([Guest], reseed, 1)
 	DBCC CHECKIDENT ([Guest], reseed)
-	DELETE [Concession]
+	DELETE [Staging]
 	DELETE [WebSales]
 
 	BULK INSERT [dbo].[WebSales]
@@ -285,8 +284,8 @@ BEGIN
 	FROM [WebSales] s
 		JOIN [WebSalesNames] n ON s.[Ticket_number] = n.[Ticket_number]
 
-	BULK INSERT [dbo].[Concession]
-	FROM 'D:\tmp\concessions.csv'
+	BULK INSERT [dbo].[Staging]
+	FROM 'D:\tmp\staging.csv'
 	WITH (
 			DATAFILETYPE = 'widechar',
 			FORMAT = 'CSV',
@@ -329,7 +328,7 @@ BEGIN
 
 	MERGE
 	INTO [Guest] t
-	USING [Concession] s
+	USING [Staging] s
 	ON t.[FullName] = s.[Forename] + ISNULL(N' ' + s.[Surname], N'')
 	WHEN MATCHED THEN UPDATE SET
 		[CheckInDate] = s.[CheckInDate],

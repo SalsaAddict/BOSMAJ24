@@ -8,6 +8,20 @@
       "request": "launch",
       "preLaunchTask": "npm: start",
       "url": "http://localhost:4200/"
+    },
+    {
+      "name": "Setup",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/sql/V2/setup.ps1",
+      "cwd": "${workspaceFolder}/sql/V2"
+    },
+    {
+      "name": "Refresh",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/sql/refresh.ps1",
+      "cwd": "${workspaceFolder}/sql"
     }
   ]
 }
