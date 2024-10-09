@@ -1,10 +1,18 @@
 SET NOCOUNT ON
 GO
+DROP TABLE IF EXISTS [Workshop]
+DROP TABLE IF EXISTS [Genre]
+DROP TABLE IF EXISTS [Level]
+DROP TABLE IF EXISTS [Slot]
+DROP TABLE IF EXISTS [Area]
+GO
 DROP PROCEDURE IF EXISTS [ExportGuestInfo]
 DROP PROCEDURE IF EXISTS [Allocate]
 DROP VIEW IF EXISTS [GuestInfo]
 DROP VIEW IF EXISTS [RoomCount]
 DROP PROCEDURE IF EXISTS [Import]
+DROP VIEW IF EXISTS [Acts]
+DROP TABLE IF EXISTS [Act]
 DROP VIEW IF EXISTS [Rooms]
 DROP VIEW IF EXISTS [OneRoomPerGuest]
 DROP TABLE IF EXISTS [Room]
@@ -17,6 +25,7 @@ DROP TABLE IF EXISTS [Guest]
 DROP TABLE IF EXISTS [GuestType]
 DROP TABLE IF EXISTS [Diet]
 DROP TABLE IF EXISTS [Stay]
+DROP TABLE IF EXISTS [Day]
 DROP VIEW IF EXISTS [WebSalesOrderSequence]
 DROP VIEW IF EXISTS [WebSalesTicketsPerOrder]
 DROP VIEW IF EXISTS [WebSalesNames]
@@ -134,12 +143,15 @@ CREATE TABLE [Guest] (
 	[FullName] AS CONVERT(NVARCHAR(255), [Forename] + ISNULL(N' ' + [Surname], N'')) PERSISTED,
 	[CheckInDate] DATE NOT NULL,
 	[FlightInTime] TIME NULL,
+	[ArriveWhen] AS DATEADD(minute, DATEDIFF(minute, 0, ISNULL(DATEADD(hour, 4, [FlightInTime]), N'15:00')), CONVERT(SMALLDATETIME, [CheckInDate])),
 	[CheckOutDate] DATE NOT NULL,
 	[FlightOutTime] TIME NULL,
+	[DepartWhen] AS DATEADD(minute, DATEDIFF(minute, 0, ISNULL(DATEADD(hour, -4, [FlightOutTime]), N'10:00')), CONVERT(SMALLDATETIME, [CheckOutDate])),
 	[DietaryInfo] NVARCHAR(255) NULL,
 	[Staff] BIT NOT NULL,
 	CONSTRAINT [PK_Guest] PRIMARY KEY CLUSTERED ([Id]),
 	CONSTRAINT [UQ_Guest_FullName] UNIQUE ([FullName]),
+	CONSTRAINT [UQ_Guest_Act] UNIQUE ([FullName], [Staff]),
 	CONSTRAINT [FK_Guest_WebSales] FOREIGN KEY ([TicketId], [FullName]) REFERENCES [WebSales] ([Ticket_number], [Guest_name]),
 	CONSTRAINT [FK_Guest_Stay] FOREIGN KEY ([CheckInDate], [CheckOutDate]) REFERENCES [Stay] ([CheckInDate], [CheckOutDate]),
 	CONSTRAINT [FK_Guest_Diet] FOREIGN KEY ([DietaryInfo]) REFERENCES [Diet] ([DietaryInfo]),
@@ -259,11 +271,37 @@ FROM [dbo].[Guest] g
 	JOIN [dbo].[Room] r ON g.[Id] IN (r.[GuestId1], r.[GuestId2])
 GROUP BY r.[Id], r.[RoomTypeId], r.[RoomConfigId], r.[Confirmed]
 GO
+CREATE TABLE [Act] (
+	[Name] NVARCHAR(255) NOT NULL,
+	[Artist1] NVARCHAR(255) NOT NULL,
+	[Artist2] NVARCHAR(255) NULL,
+	[Staff] BIT NOT NULL,
+	CONSTRAINT [PK_Act] PRIMARY KEY ([Name]),
+	CONSTRAINT [CK_Act_Staff] CHECK ([Staff] = 1),
+	CONSTRAINT [FK_Act_Guest_Artist1] FOREIGN KEY ([Artist1], [Staff])
+		REFERENCES [Guest] ([FullName], [Staff]),
+	CONSTRAINT [FK_Act_Guest_Artist2] FOREIGN KEY ([Artist2], [Staff])
+		REFERENCES [Guest] ([FullName], [Staff])
+)
+GO
+CREATE VIEW [Acts]
+WITH SCHEMABINDING
+AS
+SELECT
+	[Name] = a.[Name],
+	[ArriveWhen] = MAX(g.[ArriveWhen]),
+	[DepartWhen] = MIN(g.[DepartWhen])
+FROM [dbo].[Act] a
+	JOIN [dbo].[Guest] g ON g.[FullName] IN (a.[Artist1], a.[Artist2])
+GROUP BY a.[Name]
+GO
 CREATE PROCEDURE [Import]
 AS
 BEGIN
 	SET NOCOUNT ON
 
+	DELETE [Workshop]
+	DELETE [Act]
 	DELETE [Room]
 	DBCC CHECKIDENT ([Room], reseed, 1)
 	DBCC CHECKIDENT ([Room], reseed)
@@ -297,6 +335,22 @@ BEGIN
 
 	BULK INSERT [dbo].[Match]
 	FROM 'D:\tmp\match.csv'
+	WITH (
+			DATAFILETYPE = 'widechar',
+			FORMAT = 'CSV',
+			FIRSTROW = 2
+		)
+
+	BULK INSERT [dbo].[Act]
+	FROM 'D:\tmp\act.csv'
+	WITH (
+			DATAFILETYPE = 'widechar',
+			FORMAT = 'CSV',
+			FIRSTROW = 2
+		)
+
+	BULK INSERT [dbo].[Workshop]
+	FROM 'D:\tmp\workshop.csv'
 	WITH (
 			DATAFILETYPE = 'widechar',
 			FORMAT = 'CSV',

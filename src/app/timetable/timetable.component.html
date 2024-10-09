@@ -21,126 +21,39 @@
             </div>
         </form>
     </div>
-    <table class="table table-bordered text-center align-middle">
+    <table class="table table-bordered text-center align-middle" *ngIf="timetable">
         <thead>
-            <th>Time</th>
-            <th>Reception Area</th>
-            <th>Main Room</th>
-            <th>Lake Terrace</th>
-            <th>Outdoor Stage</th>
-            <th>Pool Area</th>
+            <tr>
+                <th>Time</th>
+                <th *ngFor="let area of timetable.Areas">{{area.Description}}</th>
+                <th>Pool Area</th>
+            </tr>
         </thead>
-        <tbody *ngIf="options.value.day !== 'Thu'">
-            <tr>
-                <th>08:00 - 09:00</th>
-                <th colspan="5" rowspan="2" class="table-secondary">Breakfast</th>
-            </tr>
-            <tr>
-                <th>09:00 - 10:00</th>
-            </tr>
-            <tr>
-                <th>10:00 - 10:50</th>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td rowspan="3"></td>
-            </tr>
-            <tr>
-                <th>11:00 - 11:50</th>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-            </tr>
-            <tr>
-                <th>12:00 - 12:50</th>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-            </tr>
-            <tr>
-                <th>13:00 - 14:00</th>
-                <th colspan="5" rowspan="2" class="table-secondary">Lunch</th>
-            </tr>
-            <tr>
-                <th>14:00 - 15:00</th>
-            </tr>
-        </tbody>
-        <tbody [ngSwitch]="options.value.day === 'Thu'">
-            <tr>
-                <th>15:00 - 15:50</th>
-                <td *ngSwitchCase="true" rowspan="5">Closed</td>
-                <td *ngSwitchCase="false" class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td rowspan="4" class="table-info">Pool Party</td>
-            </tr>
-            <tr>
-                <th>16:00 - 16:50</th>
-                <td *ngSwitchCase="false" class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-            </tr>
-            <tr>
-                <th>17:00 - 17:50</th>
-                <td *ngSwitchCase="false" class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-            </tr>
-            <tr>
-                <th>18:00 - 18:50</th>
-                <td *ngSwitchCase="false" class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-                <td class="table-warning">Workshops</td>
-            </tr>
-            <tr [ngSwitch]="options.value.day">
-                <th>19:00 - 20:00</th>
-                <td *ngIf="options.value.day != 'Thu'">Closed</td>
-                <td>Closed</td>
-                <td>Closed</td>
-                <td *ngSwitchCase="'Thu'">Closed</td>
-                <td *ngSwitchCase="'Fri'" class="table-danger">Shows</td>
-                <td *ngSwitchCase="'Sat'" class="table-danger">Shows</td>
-                <td *ngSwitchCase="'Sun'" class="table-danger">Jack &amp; Jill</td>
-                <td></td>
-            </tr>
-        </tbody>
         <tbody>
             <tr>
-                <th>20:00 - 21:00</th>
-                <th colspan="5" rowspan="2" class="table-secondary">Dinner</th>
+                <th>08:00</th>
+                <td rowspan="2" [attr.colspan]="maxSpan" class="table-secondary text-uppercase text-muted">
+                    Breakfast
+                </td>
             </tr>
             <tr>
-                <th>21:00 - 22:00</th>
+                <th>09:00</th>
+            </tr>
+            <tr *ngFor="let hour of [10,11,12]; let i = index">
+                <th>{{hour}}:00</th>
+                <td *ngFor="let area of timetable.Areas" class="p-0">
+                    <app-workshop [workshops]="workshops(day, hour, area.Id)"></app-workshop>
+                </td>
+                <td *ngIf="i === 0" rowspan="3">CHILLOUT</td>
             </tr>
             <tr>
-                <th>22:00 - 23:00</th>
-                <td rowspan="4" class="table-info">100% Salsa</td>
-                <td rowspan="4" class="table-info">100% Bachata</td>
-                <td rowspan="3" class="table-info">Reggaeton<br>&<br>Chillout</td>
-                <td rowspan="5">Closed</td>
-                <td rowspan="5">Closed</td>
+                <th>13:00</th>
+                <td rowspan="2" [attr.colspan]="maxSpan" class="table-secondary text-uppercase text-muted">
+                    Lunch
+                </td>
             </tr>
             <tr>
-                <th>23:00 - 00:00</th>
-            </tr>
-            <tr>
-                <th>00:00 - 01:00</th>
-            </tr>
-            <tr>
-                <th>01:00 - 02:00</th>
-                <td rowspan="2">Closed</td>
-            </tr>
-            <tr>
-                <th>02:00 - 03:00</th>
-                <td>Closed</td>
-                <td rowspan="4" class="table-info">50/50 Salsa &amp; Bachata</td>
+                <th>14:00</th>
             </tr>
         </tbody>
     </table>
