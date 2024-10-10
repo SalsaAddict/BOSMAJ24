@@ -4,25 +4,15 @@ import {
   FormsModule,
   FormControl,
   FormGroup,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
-import { TimetableClosedDirective } from '../timetable-closed.directive';
-import {
-  IWorkshop,
-  TimetableDay,
-  WorkshopComponent
-} from '../workshop/workshop.component';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth.service';
-import { BreakDirective } from './break.directive';
-
-export interface ITimetable {
-  Areas: {
-    Id: string;
-    Description: string;
-  }[];
-  Workshops: IWorkshop[];
-}
+import { Day, IShow, ITimetable } from '../itimetable';
+import { SlotComponent } from '../slot/slot.component';
+import { SlotsComponent } from '../slots/slots.component';
+import { BreakComponent } from '../break/break.component';
 
 @Component({
   selector: 'app-timetable',
@@ -31,9 +21,9 @@ export interface ITimetable {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    TimetableClosedDirective,
-    WorkshopComponent,
-    BreakDirective
+    BreakComponent,
+    SlotComponent,
+    SlotsComponent
   ],
   templateUrl: './timetable.component.html',
   styles: ``
@@ -44,24 +34,52 @@ export class TimetableComponent {
       .openEncryptedJsonFile<ITimetable>('assets/timetable.txt')
       .then((timetable) => {
         this.timetable = timetable;
+        this.timetable.Workshops.push({
+          Day: 'Fri',
+          Hour: 17,
+          AreaId: 'S',
+          Title: 'Jack & Jill',
+          Subtitle: 'Sign-Up & Briefing'
+        } as IShow);
+        this.timetable.Workshops.push({
+          Day: 'Fri',
+          Hour: 18,
+          AreaId: 'S',
+          Title: 'Jack & Jill',
+          Subtitle: 'Competition'
+        } as IShow);
+        this.timetable.Workshops.push({
+          Day: 'Sat',
+          Hour: 10,
+          AreaId: 'S',
+          Title: 'Tech Rehearsal',
+          Subtitle: '(Performers Only)'
+        } as IShow);
+        this.timetable.Workshops.push({
+          Day: 'Sat',
+          Hour: 18,
+          AreaId: 'S',
+          Title: 'SHOWTIME!'
+        } as IShow);
       });
   }
   timetable?: ITimetable;
-  workshops(day: TimetableDay, hour: number, areaId: string) {
-    return this.timetable?.Workshops.filter((workshop) => {
-      if (workshop.Day !== day) return false;
-      if (workshop.Hour !== hour) return false;
-      if (workshop.AreaId !== areaId) return false;
-      return true;
-    });
-  }
-  get maxSpan() {
-    return (this.timetable?.Areas.length ?? 0) + 1;
-  }
   readonly options = new FormGroup({
-    day: new FormControl<TimetableDay>('Fri')
+    day: new FormControl<Day>('Thu', [Validators.required])
   });
   get day() {
     return this.options.value.day!;
+  }
+  readonly slots = {
+    am: [10, 11, 12],
+    pm: [15, 16, 17]
+  };
+  items(day: Day, hour: number, areaId: string) {
+    return this.timetable?.Workshops.filter((slot) => {
+      if (slot.Day !== day) return false;
+      if (slot.Hour !== hour) return false;
+      if (slot.AreaId !== areaId) return false;
+      return true;
+    });
   }
 }

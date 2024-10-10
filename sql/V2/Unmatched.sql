@@ -1,14 +1,15 @@
 SELECT
+	g.[Id],
 	s.[Order_number],
 	s.[Ticket_number],
 	s.[Ticket_type],
-	s.[Guest_name],
+	g.[FullName],
 	s.[Coupon],
 	s.[Someone_to_share_with],
 	s.[Sharing_info_1],
 	s.[Sharing_info_2]
 FROM [Advent_PAH]..[Guest] g
-	JOIN [Advent_PAH]..[WebSales] s ON g.[TicketId] = s.[Ticket_number]
+	LEFT JOIN [Advent_PAH]..[WebSales] s ON g.[TicketId] = s.[Ticket_number]
 WHERE [Id] NOT IN (
 		SELECT [GuestId1] FROM [Advent_PAH]..[Room] UNION
 		SELECT [GuestId2] FROM [Advent_PAH]..[Room] WHERE [GuestId2] IS NOT NULL

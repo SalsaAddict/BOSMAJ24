@@ -1,0 +1,4 @@
+<tr *ngFor="let hour of hours; let i=index">
+    <th>{{hour | number: '2.0-0'}}:00</th>
+    <td *ngIf="i === 0" [attr.rowspan]="hours.length" [attr.colspan]="areas + 1" class="table-secondary">{{title}}</td>
+</tr>

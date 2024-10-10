@@ -55,7 +55,7 @@ VALUES
 	(1, N'Beginner'),
 	(2, N'Improver'),
 	(3, N'Intermediate'),
-	(4, N'Advanced')
+	(4, N'Int/Adv')
 GO
 CREATE TABLE [Genre] (
 	[Id] NCHAR(1) NOT NULL,
@@ -79,10 +79,11 @@ CREATE TABLE [Workshop] (
 	[LevelId] TINYINT NOT NULL,
 	[GenreId] NCHAR(1) NOT NULL,
 	CONSTRAINT [PK_Workshop] PRIMARY KEY ([Date], [Hour], [Act]),
-	CONSTRAINT [FK_Workshop_Area] FOREIGN KEY ([AreaId]) REFERENCES [Area] ([Id]),
 	CONSTRAINT [FK_Workshop_Act] FOREIGN KEY ([Act]) REFERENCES [Act] ([Name]),
 	CONSTRAINT [FK_Workshop_Level] FOREIGN KEY ([LevelId]) REFERENCES [Level] ([Id]),
-	CONSTRAINT [FK_Workshop_Genre] FOREIGN KEY ([GenreId]) REFERENCES [Genre] ([Id])
+	CONSTRAINT [FK_Workshop_Genre] FOREIGN KEY ([GenreId]) REFERENCES [Genre] ([Id]),
+	CONSTRAINT [FK_Workshop_Slot] FOREIGN KEY ([Date], [Hour], [AreaId])
+		REFERENCES [Slot] ([Date], [Hour], [AreaId])
 )
 GO
 CREATE PROCEDURE [ExportTimetable]

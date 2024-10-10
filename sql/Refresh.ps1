@@ -11,7 +11,7 @@ Import-Excel "websales.xlsx" -StartRow 3 -NoHeader | Export-Csv "websales.csv" -
 Import-Excel "staging.xlsx" -AsText CheckInDate, FlightInTime, CheckOutDate, FlightOutTime | Export-Csv "staging.csv" -NoTypeInformation -Encoding unicode
 Import-Excel "match.xlsx" | Export-Csv "match.csv" -NoTypeInformation -Encoding unicode
 Import-Excel "act.xlsx" | Export-Csv "act.csv" -NoTypeInformation -Encoding unicode
-Import-Excel "workshop.xlsx" | Export-Csv "workshop.csv" -NoTypeInformation -Encoding unicode
+Import-Excel "workshop.xlsx" -AsText Date | Export-Csv "workshop.csv" -NoTypeInformation -Encoding unicode
 
 Copy-Item "websales.csv" $ServerTempPath
 Copy-Item "staging.csv" $ServerTempPath

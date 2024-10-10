@@ -1,0 +1,19 @@
+<div [ngSwitch]="!!items?.length">
+    <div *ngSwitchCase="false" class="text-muted">
+        Closed
+    </div>
+    <div *ngSwitchCase="true" class="row m-0 p-0">
+        <div *ngFor="let item of items" class="col m-0 p-0" [ngSwitch]="isWorkshop(item)"
+            [style.background-color]="bgColor(item)">
+            <div *ngSwitchCase="true">
+                <p class="m-0"><b>{{asWorkshop(item).Act}}</b></p>
+                <p class="m-0">{{asWorkshop(item).Title}}</p>
+                <p class="m-0">{{asWorkshop(item).Level}}</p>
+            </div>
+            <div *ngSwitchCase="false">
+                <p class="m-0"><b>{{asShow(item).Title}}</b></p>
+                <p class="m-0" *ngIf="asShow(item).Subtitle">{{asShow(item).Subtitle}}</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,27 +1,19 @@
-<div class="container-fluid">
-    <div class="text-center mb-2">
+<div class="container-fluid" *ngIf="timetable">
+    <div class="text-center">
         <form [formGroup]="options">
-            <div class="btn-group col-3">
-                <input type="radio" class="btn-check" formControlName="day" value="Thu" id="type0" />
-                <label class="btn btn-outline-secondary" for="type0">
-                    Thu
-                </label>
-                <input type="radio" class="btn-check" formControlName="day" value="Fri" id="type1" />
-                <label class="btn btn-outline-secondary" for="type1">
-                    Fri
-                </label>
-                <input type="radio" class="btn-check" formControlName="day" value="Sat" id="type2" />
-                <label class="btn btn-outline-secondary" for="type2">
-                    Sat
-                </label>
-                <input type="radio" class="btn-check" formControlName="day" value="Sun" id="type3" />
-                <label class="btn btn-outline-secondary" for="type3">
-                    Sun
-                </label>
+            <div class="btn-group">
+                <ng-template ngFor let-item [ngForOf]="timetable.Days" let-i="index">
+                    <input type="radio" class="btn-check" formControlName="day" [value]="item.Day"
+                        [attr.id]="'day'+i" />
+                    <label class="btn btn-outline-secondary text-uppercase" [attr.for]="'day'+i">
+                        {{item.Day}}
+                    </label>
+                </ng-template>
             </div>
         </form>
+        <br>
     </div>
-    <table class="table table-bordered text-center align-middle" *ngIf="timetable">
+    <table class="table table-sm table-bordered text-center align-middle text-uppercase" style="font-size: small;">
         <thead>
             <tr>
                 <th>Time</th>
@@ -29,32 +21,13 @@
                 <th>Pool Area</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <th>08:00</th>
-                <td rowspan="2" [attr.colspan]="maxSpan" class="table-secondary text-uppercase text-muted">
-                    Breakfast
-                </td>
-            </tr>
-            <tr>
-                <th>09:00</th>
-            </tr>
-            <tr *ngFor="let hour of [10,11,12]; let i = index">
-                <th>{{hour}}:00</th>
-                <td *ngFor="let area of timetable.Areas" class="p-0">
-                    <app-workshop [workshops]="workshops(day, hour, area.Id)"></app-workshop>
-                </td>
-                <td *ngIf="i === 0" rowspan="3">CHILLOUT</td>
-            </tr>
-            <tr>
-                <th>13:00</th>
-                <td rowspan="2" [attr.colspan]="maxSpan" class="table-secondary text-uppercase text-muted">
-                    Lunch
-                </td>
-            </tr>
-            <tr>
-                <th>14:00</th>
-            </tr>
+        <ng-container *ngIf="day !== 'Thu'">
+            <tbody break [hours]="[8,9]" title="Breakfast" [areas]="timetable.Areas.length"></tbody>
+            <tbody slots [day]="day" [timetable]="timetable" [hours]="[10,11,12]"></tbody>
+            <tbody break [hours]="[13,14]" title="Lunch" [areas]="timetable.Areas.length"></tbody>
+        </ng-container>
+        <tbody slots [day]="day" [timetable]="timetable" [hours]="[15,16,17,18,19]" [pool]="day === 'Thu' ? 0 : 3">
         </tbody>
+        <tbody break [hours]="[20,21]" title="Dinner" [areas]="timetable.Areas.length"></tbody>
     </table>
 </div>
