@@ -9,8 +9,6 @@ export interface ISummary {
   GuestsThuMon: number;
   StaffFriMon: number;
   GuestsFriMon: number;
-  StaffSatMon: number;
-  GuestsSatMon: number;
   Total: number;
 }
 export interface IAllocation {
