@@ -4,6 +4,7 @@ import { GuestInfoComponent } from './guest-info/guest-info.component';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './auth.service';
 import { TimetableComponent } from './timetable/timetable.component';
+import { TeachersComponent } from './teachers/teachers.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,6 +21,11 @@ export const routes: Routes = [
   {
     path: 'timetable',
     component: TimetableComponent,
+    canActivate: [AuthService]
+  },
+  {
+    path: 'teachers',
+    component: TeachersComponent,
     canActivate: [AuthService]
   },
   { path: '**', redirectTo: '/login' }

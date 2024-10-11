@@ -1,6 +1,8 @@
 SET NOCOUNT ON
 GO
+DROP PROCEDURE IF EXISTS [ExportTeachers]
 DROP PROCEDURE IF EXISTS [ExportTimetable]
+DROP VIEW IF EXISTS [WorkshopsPerTeacher]
 DROP TABLE IF EXISTS [Workshop]
 DROP TABLE IF EXISTS [Genre]
 DROP TABLE IF EXISTS [Level]
@@ -86,6 +88,19 @@ CREATE TABLE [Workshop] (
 		REFERENCES [Slot] ([Date], [Hour], [AreaId])
 )
 GO
+CREATE VIEW [WorkshopsPerTeacher]
+WITH SCHEMABINDING
+AS
+SELECT
+	[Teacher] = g.[FullName],
+	[Workshops] = COUNT_BIG(*)
+FROM [dbo].[Guest] g
+	JOIN [dbo].[Act] act ON g.[FullName] IN (act.[Artist1], act.[Artist2])
+	JOIN [dbo].[Workshop] w ON act.[Name] = w.[Act]
+GROUP BY g.[FullName]
+GO
+CREATE UNIQUE CLUSTERED INDEX [PK_WorkshopsPerTeacher] ON [WorkshopsPerTeacher] ([Teacher])
+GO
 CREATE PROCEDURE [ExportTimetable]
 AS
 BEGIN
@@ -124,6 +139,46 @@ BEGIN
 				)
 		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 	)
+	RETURN
+END
+GO
+CREATE PROCEDURE [ExportTeachers]
+AS
+BEGIN
+	SET NOCOUNT ON
+	SELECT (
+			SELECT
+				[Teacher] = tch.[FullName],
+				[TeacherRow] = ROW_NUMBER() OVER (PARTITION BY tch.[FullName] ORDER BY act.[Name], w.[Date], w.[Hour], a.[Sort]),
+				[TeacherRowSpan] = COUNT(*) OVER (PARTITION BY tch.[FullName]),
+				[TeacherCount] = COUNT(w.[Act]) OVER (PARTITION BY tch.[FullName]),
+				[Act] = act.[Name],
+				[ActRow] = ROW_NUMBER() OVER (PARTITION BY tch.[FullName], act.[Name] ORDER BY w.[Date], w.[Hour], a.[Sort]),
+				[ActRowSpan] = COUNT(*) OVER (PARTITION BY tch.[FullName], act.[Name]),
+				[ActCount] = COUNT(w.[Act]) OVER (PARTITION BY tch.[FullName], act.[Name]),
+				[Partner] = ISNULL(NULLIF(act.[Artist1], tch.[FullName]), act.[Artist2]),
+				[Day] = LEFT(DATENAME(weekday, w.[Date]), 3),
+				[Time] = CONVERT(NVARCHAR(5), CONVERT(TIME, DATEADD(hour, w.[Hour], 0))),
+				[Area] = a.[Description],
+				[Title] = w.[Title],
+				[Level] = l.[Description],
+				[Genre] = g.[Description],
+				[Ok] = CONVERT(BIT, CASE
+						WHEN dte.[When] NOT BETWEEN tch.[ArriveWhen] AND tch.[DepartWhen] THEN 0
+						WHEN COUNT(w.[Act]) OVER (PARTITION BY tch.[FullName], w.[Date], w.[Hour]) > 1 THEN NULL
+						ELSE 1
+					END)
+			FROM [Guest] tch
+				JOIN [Act] act ON tch.[FullName] IN (act.[Artist1], act.[Artist2])
+				LEFT JOIN [Workshop] w
+						JOIN [Area] a ON w.[AreaId] = a.[Id]
+						JOIN [Level] l ON w.[LevelId] = l.[Id]
+						JOIN [Genre] g ON w.[GenreId] = g.[Id]
+						CROSS APPLY (VALUES (DATEADD(hour, w.[Hour], CONVERT(SMALLDATETIME, w.[Date])))) dte ([When])
+					ON act.[Name] = w.[Act]
+			ORDER BY tch.[FullName], act.[Name], w.[Date], w.[Hour], a.[Sort]
+			FOR JSON PATH
+		)
 	RETURN
 END
 GO

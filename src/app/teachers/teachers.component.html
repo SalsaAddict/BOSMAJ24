@@ -1,0 +1,67 @@
+<div class="container-fluid">
+    <div class="text-center">
+        <form [formGroup]="options">
+            <div class="btn-group">
+                <ng-template ngFor let-item [ngForOf]="['All','0','1','2+']" let-i="index">
+                    <input type="radio" class="btn-check" formControlName="count" [value]="item"
+                        [attr.id]="'count'+i" />
+                    <label class="btn btn-outline-secondary text-uppercase" [attr.for]="'count'+i">
+                        {{item}}
+                    </label>
+                </ng-template>
+            </div>
+        </form>
+        <br>
+    </div>
+    <div *ngIf="teachers">
+        <table class="table table-bordered align-middle text-nowrap text-uppercase">
+            <thead>
+                <tr>
+                    <th colspan="2">Teacher</th>
+                    <th>Partner</th>
+                    <th colspan="2">Artist/Act</th>
+                    <th class="text-center" style="width: 0;">Day</th>
+                    <th class="text-center" style="width: 0;">Time</th>
+                    <th>Area</th>
+                    <th>Title</th>
+                    <th>Level</th>
+                    <th>Genre</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let teacher of data()">
+                    <td [attr.rowspan]="teacher.TeacherRowSpan" *ngIf="teacher.TeacherRow === 1">
+                        <span class="badge rounded-pill opacity-75"
+                            [ngClass]="bgCount(teacher.TeacherCount)">{{teacher.TeacherCount}}</span>
+                    </td>
+                    <th [attr.rowspan]="teacher.TeacherRowSpan" *ngIf="teacher.TeacherRow === 1">
+                        {{teacher.Teacher}}
+                    </th>
+                    <td [attr.rowspan]="teacher.ActRowSpan" *ngIf="teacher.ActRow === 1" [ngSwitch]="!!teacher.Partner">
+                        <span *ngSwitchCase="true">{{teacher.Partner}}</span>
+                        <span *ngSwitchCase="false" class="text-muted text-uppercase">Solo</span>
+                    </td>
+                    <td [attr.rowspan]="teacher.ActRowSpan" *ngIf="teacher.ActRow === 1">
+                        <span class="badge rounded-pill opacity-75"
+                            [ngClass]="bgCount(teacher.ActCount)">{{teacher.ActCount}}</span>
+                    </td>
+                    <th [attr.rowspan]="teacher.ActRowSpan" *ngIf="teacher.ActRow === 1">
+                        {{teacher.Act}}
+                    </th>
+                    <td class="text-center" [class.table-danger]="teacher.Ok === false"
+                        [class.table-warning]="teacher.Ok === undefined">
+                        {{teacher.Day}}
+                    </td>
+                    <td class="text-center" [class.table-danger]="teacher.Ok === false"
+                        [class.table-warning]="teacher.Ok === undefined">
+                        {{teacher.Time}}
+                    </td>
+                    <td>{{teacher.Area}}</td>
+                    <td>{{teacher.Title}}</td>
+                    <td>{{teacher.Level}}</td>
+                    <td>{{teacher.Genre}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

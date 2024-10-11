@@ -32,5 +32,6 @@ Invoke-Sqlcmd -ServerInstance $Server -Database $Database -Query "EXEC [Allocate
 sqlcmd -S $Server -d $Database -E -C -Q "EXEC [ExportHotelInfo]" -y 0 -o "hotelinfo.json" -f 65001
 sqlcmd -S $Server -d $Database -E -C -Q "EXEC [ExportGuestInfo]" -y 0 -o "guestinfo.json" -f 65001
 sqlcmd -S $Server -d $Database -E -C -Q "EXEC [ExportTimetable]" -y 0 -o "timetable.json" -f 65001
+sqlcmd -S $Server -d $Database -E -C -Q "EXEC [ExportTeachers]" -y 0 -o "teachers.json" -f 65001
 
 node encrypt.js

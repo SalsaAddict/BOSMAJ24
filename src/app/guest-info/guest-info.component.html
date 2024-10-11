@@ -101,7 +101,8 @@
                     <app-guest-detail [condition]="guest.RoomConfigOk" [value]="guest.RoomConfig"></app-guest-detail>
                 </td>
                 <td>
-                    <app-guest-detail [condition]="guest.ReservationOk" [value]="guest.Reservation"></app-guest-detail>
+                    <app-guest-detail [condition]="guest.ReservationOk" [value]="guest.Reservation"
+                        nullClass="bi-exclamation-triangle-fill text-warning"></app-guest-detail>
                 </td>
                 <td class="text-center" style="width: 0;" [ngSwitch]="guest.Confirmed">
                     <i class="bi-check-circle text-success" *ngSwitchCase="true"></i>

@@ -3,8 +3,8 @@
         Closed
     </div>
     <div *ngSwitchCase="true" class="row m-0 p-0">
-        <div *ngFor="let item of items" class="col m-0 p-0" [ngSwitch]="isWorkshop(item)"
-            [style.background-color]="bgColor(item)">
+        <div *ngFor="let item of items" class="col m-0 px-1 py-2" [ngSwitch]="isWorkshop(item)"
+            [style.background-image]="bgColor(item)">
             <div *ngSwitchCase="true">
                 <p class="m-0"><b>{{asWorkshop(item).Act}}</b></p>
                 <p class="m-0">{{asWorkshop(item).Title}}</p>

@@ -26,37 +26,37 @@ export class SlotComponent {
     return `rgba(${r}, ${g}, ${b}, ${a})`;
   }
   bgColor(item: ISlot) {
+    let r, g, b, a, a2: number;
     if (isWorkshop(item)) {
-      let a: number;
-      switch (item.LevelId) {
-        case 0:
-          a = 0.2;
-          break;
-        case 1:
-          a = 0.4;
-          break;
-        case 2:
-          a = 0.6;
-          break;
-        case 3:
-          a = 0.8;
-          break;
-        case 4:
-          a = 1;
-          break;
-        default:
-          a = 0;
-          break;
-      }
       switch (item.GenreId) {
         case 'B':
-          return this.rgba(50, 255, 100, a);
+          r = 50;
+          g = 255;
+          b = 100;
+          break;
         case 'S':
-          return this.rgba(50, 150, 255, a);
+          r = 50;
+          g = 150;
+          b = 255;
+          break;
         default:
-          return this.rgba(255, 50, 50, a);
+          r = 255;
+          g = 50;
+          b = 255;
+          break;
       }
+      a = (item.LevelId + 1) * 0.2;
+    } else {
+      r = 255;
+      g = 100;
+      b = 100;
+      a = 1;
     }
-    return this.rgba(255, 200, 100, 1);
+    return `radial-gradient(circle, ${this.rgba(
+      r,
+      g,
+      b,
+      a - 0.1
+    )}, 75%, ${this.rgba(r - 50, g - 50, b - 50, a)})`;
   }
 }

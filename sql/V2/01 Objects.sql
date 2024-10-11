@@ -1,5 +1,8 @@
 SET NOCOUNT ON
 GO
+DROP PROCEDURE IF EXISTS [ExportTeachers]
+DROP PROCEDURE IF EXISTS [ExportTimetable]
+DROP VIEW IF EXISTS [WorkshopsPerTeacher]
 DROP TABLE IF EXISTS [Workshop]
 DROP TABLE IF EXISTS [Genre]
 DROP TABLE IF EXISTS [Level]
@@ -108,6 +111,7 @@ INSERT INTO [Stay] ([CheckInDate], [CheckOutDate], [AllowReservation])
 VALUES
 	(N'2024-10-31', N'2024-11-04', 1),
 	(N'2024-11-01', N'2024-11-04', 1),
+	(N'2024-10-31', N'2024-11-03', 0),
 	(N'2024-11-02', N'2024-11-04', 0),
 	(N'2024-11-01', N'2024-11-03', 0)
 GO
@@ -261,8 +265,8 @@ SELECT
 	[Staff] = CONVERT(BIT, CASE WHEN MAX(CONVERT(INT, g.[Staff])) = 1 THEN 1 ELSE 0 END),
 	[RoomTypeId] = r.[RoomTypeId],
 	[RoomConfigId] = r.[RoomConfigId],
-	[CheckInDate] = MIN(g.[CheckInDate]),
-	[CheckOutDate] = MAX(g.[CheckOutDate]),
+	[CheckInDate] = CONVERT(DATE, CASE WHEN MIN(g.[CheckInDate]) > N'2024-11-01' THEN N'2024-11-01' ELSE MIN(g.[CheckInDate]) END),
+	[CheckOutDate] = CONVERT(DATE, N'2024-11-04'),
 	[Occupants] = COUNT_BIG(*),
 	[GuestId1] = MIN(r.[GuestId1]),
 	[GuestId2] = MIN(r.[GuestId2]),
@@ -317,7 +321,8 @@ BEGIN
 	WITH (
 			DATAFILETYPE = 'widechar',
 			FORMAT = 'CSV',
-			FIRSTROW = 2
+			FIRSTROW = 2,
+			CHECK_CONSTRAINTS
 		)
 
 	UPDATE s
@@ -330,31 +335,8 @@ BEGIN
 	WITH (
 			DATAFILETYPE = 'widechar',
 			FORMAT = 'CSV',
-			FIRSTROW = 2
-		)
-
-	BULK INSERT [dbo].[Match]
-	FROM 'D:\tmp\match.csv'
-	WITH (
-			DATAFILETYPE = 'widechar',
-			FORMAT = 'CSV',
-			FIRSTROW = 2
-		)
-
-	BULK INSERT [dbo].[Act]
-	FROM 'D:\tmp\act.csv'
-	WITH (
-			DATAFILETYPE = 'widechar',
-			FORMAT = 'CSV',
-			FIRSTROW = 2
-		)
-
-	BULK INSERT [dbo].[Workshop]
-	FROM 'D:\tmp\workshop.csv'
-	WITH (
-			DATAFILETYPE = 'widechar',
-			FORMAT = 'CSV',
-			FIRSTROW = 2
+			FIRSTROW = 2,
+			CHECK_CONSTRAINTS
 		)
 
 	-- Dominic Pisano & Kally Woodgate
@@ -396,6 +378,33 @@ BEGIN
 	WHEN NOT MATCHED BY TARGET THEN
 		INSERT ([Forename], [Surname], [CheckInDate], [FlightInTime], [CheckOutDate], [FlightOutTime], [Staff])
 		VALUES (s.[Forename], s.[Surname], s.[CheckInDate], s.[FlightInTime], s.[CheckOutDate], s.[FlightOutTime], s.[Staff]);
+
+	BULK INSERT [dbo].[Match]
+	FROM 'D:\tmp\match.csv'
+	WITH (
+			DATAFILETYPE = 'widechar',
+			FORMAT = 'CSV',
+			FIRSTROW = 2,
+			CHECK_CONSTRAINTS
+		)
+
+	BULK INSERT [dbo].[Act]
+	FROM 'D:\tmp\act.csv'
+	WITH (
+			DATAFILETYPE = 'widechar',
+			FORMAT = 'CSV',
+			FIRSTROW = 2,
+			CHECK_CONSTRAINTS
+		)
+
+	BULK INSERT [dbo].[Workshop]
+	FROM 'D:\tmp\workshop.csv'
+	WITH (
+			DATAFILETYPE = 'widechar',
+			FORMAT = 'CSV',
+			FIRSTROW = 2,
+			CHECK_CONSTRAINTS
+		)
 
 	RETURN
 END
