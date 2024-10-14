@@ -80,11 +80,10 @@ export class ActivitiesComponent {
           rgb = [140, 200, 255];
           break;
         case 'O':
-          rgb = [255, 50, 100];
+          rgb = [180, 100, 255];
           break;
         default:
-          rgb = [255, 255, 255];
-          break;
+          return;
       }
       a = (item.LevelId + 1) * 0.2;
     } else {
@@ -96,8 +95,7 @@ export class ActivitiesComponent {
           rgb = [255, 150, 127];
           break;
         default:
-          rgb = [255, 255, 255];
-          break;
+          return;
       }
       a = 1;
     }

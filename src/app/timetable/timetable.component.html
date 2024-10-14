@@ -20,7 +20,7 @@
   <table class="timetable" *ngIf="timetable">
     <thead>
       <tr>
-        <th>Time</th>
+        <th style="width: 1px">Time</th>
         <th *ngFor="let area of timetable.Areas">{{ area.Description }}</th>
       </tr>
     </thead>

@@ -6,7 +6,6 @@ DROP VIEW IF EXISTS [WorkshopsPerTeacher]
 DROP TABLE IF EXISTS [Workshop]
 DROP TABLE IF EXISTS [Genre]
 DROP TABLE IF EXISTS [Level]
-DROP TABLE IF EXISTS [Slot]
 DROP TABLE IF EXISTS [Area]
 GO
 CREATE TABLE [Area] (
@@ -24,26 +23,6 @@ VALUES
 	(N'L', N'Lake Terrace', 3),
 	(N'S', N'Outdoor Stage', 4),
 	(N'P', N'Pool Area', 5)
-GO
-CREATE TABLE [Slot] (
-	[Date] DATE NOT NULL,
-	[Hour] TINYINT NOT NULL,
-	[AreaId] NCHAR(1) NOT NULL,
-	CONSTRAINT [PK_Slot] PRIMARY KEY CLUSTERED ([Date], [Hour], [AreaId]),
-	CONSTRAINT [FK_Slot_Area] FOREIGN KEY ([AreaId]) REFERENCES [Area] ([Id])
-)
-GO
-INSERT INTO [Slot] ([Date], [Hour], [AreaId])
-SELECT
-	[Date] = DATEADD(day, o.[Offset], N'2024-10-31'),
-	[Hour] = h.[Hour],
-	[AreaId] = a.[Id]
-FROM [Area] a
-	CROSS APPLY (VALUES (0), (1), (2), (3)) o ([Offset])
-	CROSS APPLY (VALUES (11), (12), (15), (16), (17)) h ([Hour])
-WHERE NOT (o.[Offset] = 0 AND a.[Id] = N'R')
-	AND NOT (o.[Offset] = 0 AND h.[Hour] < 15)
-ORDER BY o.[Offset], h.[Hour], a.[Sort]
 GO
 CREATE TABLE [Level] (
 	[Id] TINYINT NOT NULL,
@@ -83,10 +62,9 @@ CREATE TABLE [Workshop] (
 	[GenreId] NCHAR(1) NOT NULL,
 	CONSTRAINT [PK_Workshop] PRIMARY KEY ([Date], [Hour], [Act]),
 	CONSTRAINT [FK_Workshop_Act] FOREIGN KEY ([Act]) REFERENCES [Act] ([Name]),
+	CONSTRAINT [FK_Workshop_Area] FOREIGN KEY ([AreaId]) REFERENCES [Area] ([Id]),
 	CONSTRAINT [FK_Workshop_Level] FOREIGN KEY ([LevelId]) REFERENCES [Level] ([Id]),
-	CONSTRAINT [FK_Workshop_Genre] FOREIGN KEY ([GenreId]) REFERENCES [Genre] ([Id]),
-	CONSTRAINT [FK_Workshop_Slot] FOREIGN KEY ([Date], [Hour], [AreaId])
-		REFERENCES [Slot] ([Date], [Hour], [AreaId])
+	CONSTRAINT [FK_Workshop_Genre] FOREIGN KEY ([GenreId]) REFERENCES [Genre] ([Id])
 )
 GO
 CREATE VIEW [WorkshopsPerTeacher]

@@ -17,9 +17,8 @@ export class TimeDirective {
     el.nativeElement.classList.add('time');
   }
   ngOnInit() {
-    this.el.nativeElement.innerText = this.datePipe.transform(
-      toTime(this.hour),
-      'HH:mm'
-    )!;
+    let start = this.datePipe.transform(toTime(this.hour), 'HH:mm')!,
+      end = this.datePipe.transform(toTime(this.hour + 1), 'HH:mm')!;
+    this.el.nativeElement.innerHTML = `${start} &ndash; ${end}`;
   }
 }

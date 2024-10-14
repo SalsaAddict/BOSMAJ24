@@ -34,7 +34,7 @@ export interface IActivity extends ITimetableItem {
   Subtitle?: string;
   Description?: string;
   Hours: number;
-  Category: 'Performance' | 'Party';
+  Category?: 'Performance' | 'Party';
 }
 export function isActivity(item: ITimetableItem): item is IActivity {
   return !isWorkshop(item);
