@@ -75,10 +75,10 @@ BEGIN
 				AND s1.[Order_number] < s2.[Order_number]
 				AND s1.[Ticket_number] != s2.[Ticket_number]
 				AND (
-						TRIM(REPLACE(s2.[Sharing_info_1], N' ', N'')) LIKE N'%' + REPLACE(s1.[Guest_name], N' ', N'') + N'%'
-						OR TRIM(REPLACE(s2.[Sharing_info_2], N' ', N'')) LIKE N'%' + REPLACE(s1.[Guest_name], N' ', N'') + N'%'
-						OR TRIM(REPLACE(s1.[Sharing_info_1], N' ', N'')) LIKE N'%' + REPLACE(s2.[Guest_name], N' ', N'') + N'%'
-						OR TRIM(REPLACE(s1.[Sharing_info_2], N' ', N'')) LIKE N'%' + REPLACE(s2.[Guest_name], N' ', N'') + N'%'
+						TRIM(REPLACE(s2.[Sharing_info_1], N' ', N'')) LIKE N'%' + REPLACE(g1.[FullName], N' ', N'') + N'%'
+						OR TRIM(REPLACE(s2.[Sharing_info_2], N' ', N'')) LIKE N'%' + REPLACE(g1.[FullName], N' ', N'') + N'%'
+						OR TRIM(REPLACE(s1.[Sharing_info_1], N' ', N'')) LIKE N'%' + REPLACE(g2.[FullName], N' ', N'') + N'%'
+						OR TRIM(REPLACE(s1.[Sharing_info_2], N' ', N'')) LIKE N'%' + REPLACE(g2.[FullName], N' ', N'') + N'%'
 					)
 
 			MERGE

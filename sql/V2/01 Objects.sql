@@ -31,13 +31,13 @@ DROP TABLE IF EXISTS [Stay]
 DROP TABLE IF EXISTS [Day]
 DROP VIEW IF EXISTS [WebSalesOrderSequence]
 DROP VIEW IF EXISTS [WebSalesTicketsPerOrder]
-DROP VIEW IF EXISTS [WebSalesNames]
 DROP TABLE IF EXISTS [WebSales]
 GO
 CREATE TABLE [WebSales] (
 	[Order_number] NVARCHAR(50) NOT NULL,
 	[Order_date] SMALLDATETIME NOT NULL,
-	[Guest_name] NVARCHAR(255) NOT NULL,
+	[Guest_first_name] NVARCHAR(127) NOT NULL,
+	[Guest_last_name] NVARCHAR(127) NOT NULL,
 	[Email] NVARCHAR(50) NOT NULL,
 	[Ticket_type] NVARCHAR(50) NOT NULL,
 	[Ticket_number] NVARCHAR(50) NOT NULL,
@@ -56,21 +56,9 @@ CREATE TABLE [WebSales] (
 	[Sharing_info_2] NVARCHAR(200) NULL,
 	[Dietary_info] NVARCHAR(50) NULL,
 	CONSTRAINT [PK_WebSales] PRIMARY KEY CLUSTERED ([Ticket_number]),
-	CONSTRAINT [UQ_WebSales_Guest_name] UNIQUE ([Ticket_number], [Guest_name]),
+	CONSTRAINT [UQ_WebSales_Guest_full_name] UNIQUE ([Ticket_number], [Guest_first_name], [Guest_last_name]),
 	CONSTRAINT [CK_WebSales_Someone_to_share_with] CHECK ([Someone_to_share_with] IN (N'yes', N'no'))
 )
-GO
-CREATE VIEW [WebSalesNames]
-WITH SCHEMABINDING
-AS
-SELECT
-	[Ticket_number],
-	[Guest_name],
-	[Guest_forename] = TRIM(LEFT([Guest_name], CHARINDEX(N' ', [Guest_name]) - 1)),
-	[Guest_surname] = TRIM(RIGHT([Guest_name], LEN([Guest_name]) - CHARINDEX(N' ', [Guest_name])))
-FROM [dbo].[WebSales]
-GO
-CREATE UNIQUE CLUSTERED INDEX [PK_WebSalesNames] ON [WebSalesNames] ([Ticket_number])
 GO
 CREATE VIEW [WebSalesTicketsPerOrder]
 WITH SCHEMABINDING
@@ -156,7 +144,7 @@ CREATE TABLE [Guest] (
 	CONSTRAINT [PK_Guest] PRIMARY KEY CLUSTERED ([Id]),
 	CONSTRAINT [UQ_Guest_FullName] UNIQUE ([FullName]),
 	CONSTRAINT [UQ_Guest_Act] UNIQUE ([FullName], [Staff]),
-	CONSTRAINT [FK_Guest_WebSales] FOREIGN KEY ([TicketId], [FullName]) REFERENCES [WebSales] ([Ticket_number], [Guest_name]),
+	CONSTRAINT [FK_Guest_WebSales] FOREIGN KEY ([TicketId], [Forename], [Surname]) REFERENCES [WebSales] ([Ticket_number], [Guest_first_name], [Guest_last_name]),
 	CONSTRAINT [FK_Guest_Stay] FOREIGN KEY ([CheckInDate], [CheckOutDate]) REFERENCES [Stay] ([CheckInDate], [CheckOutDate]),
 	CONSTRAINT [FK_Guest_Diet] FOREIGN KEY ([DietaryInfo]) REFERENCES [Diet] ([DietaryInfo]),
 	CONSTRAINT [FK_Guest_GuestType] FOREIGN KEY ([Staff]) REFERENCES [GuestType] ([Staff])
@@ -325,11 +313,6 @@ BEGIN
 			CHECK_CONSTRAINTS
 		)
 
-	UPDATE s
-	SET [Guest_name] = n.[Guest_forename] + N' ' + n.[Guest_surname]
-	FROM [WebSales] s
-		JOIN [WebSalesNames] n ON s.[Ticket_number] = n.[Ticket_number]
-
 	BULK INSERT [dbo].[Staging]
 	FROM 'D:\tmp\staging.csv'
 	WITH (
@@ -341,14 +324,14 @@ BEGIN
 
 	-- Dominic Pisano & Kally Woodgate
 	UPDATE [WebSales]
-	SET [Guest_name] = N'Kally Woodgate', [Sharing_info_1] = N'Dominic Pisano'
+	SET [Guest_first_name] = N'Kally', [Guest_last_name] = N'Woodgate', [Sharing_info_1] = N'Dominic Pisano'
 	WHERE [Ticket_number] = N'2WJ6-Z9NB-81Q1P'
 
 	INSERT INTO [Guest] ([TicketId], [Forename], [Surname], [CheckInDate], [CheckOutDate], [DietaryInfo], [Staff])
 	SELECT
 		s.[Ticket_number],
-		n.[Guest_forename],
-		n.[Guest_surname],
+		[Forename] = s.[Guest_first_name],
+		[Surname] = s.[Guest_last_name],
 		[CheckInDate] = CASE RIGHT(s.[Ticket_type], LEN(s.[Ticket_type]) - CHARINDEX(N': ', s.[Ticket_type]) - 1)
 				WHEN N'Thurs to Mon' THEN N'2024-10-31'
 				WHEN N'Fri to Mon' THEN N'2024-11-01'
@@ -361,7 +344,6 @@ BEGIN
 			END,
 		[Staff] = CONVERT(BIT, 0)
 	FROM [WebSales] s
-		JOIN [WebSalesNames] n ON s.[Ticket_number] = n.[Ticket_number]
 		OUTER APPLY (VALUES (NULLIF(TRIM(s.[Dietary_info]), N'No'))) td ([DietaryInfo])
 		LEFT JOIN [Diet] d ON td.[DietaryInfo] = d.[DietaryInfo]
 
