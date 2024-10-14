@@ -1,0 +1,22 @@
+@for (hour of hours; track hour) {
+<tr>
+  <th [time]="hour"></th>
+  @for (area of timetable.Areas; track area.Id) { @if (!skip(hour, area)) { @if
+  (closed(hour, area)) {
+  <td>Closed</td>
+  } @else { @let items = slot(hour, area); @if (items.length === 1) { @let item
+  = items[0]; @let subtitle = getSubtitle(item); @let description =
+  getDescription(item);
+  <td [style.background-image]="bgImage(item)" [attr.rowspan]="rowspan(item)">
+    <p class="m-0">
+      <b [innerHtml]="getTitle(item)"></b>
+    </p>
+    @if (subtitle) {
+    <p class="m-0" [innerHtml]="subtitle"></p>
+    } @if (description) {
+    <p class="m-0" [innerHtml]="description"></p>
+    }
+  </td>
+  } } } }
+</tr>
+}

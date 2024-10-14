@@ -1,0 +1,25 @@
+table.timetable,
+td,
+th {
+  border: 1px solid #ddd;
+  border-collapse: collapse !important;
+}
+
+table.timetable {
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
+  text-transform: uppercase;
+  font-size: small;
+  text-wrap: nowrap;
+  th {
+    padding: 0.5rem;
+  }
+  td {
+    padding: 0;
+  }
+  td.break {
+    background-image: radial-gradient(circle, #eee, #ddd, #aaa);
+    font-weight: bold;
+  }
+}

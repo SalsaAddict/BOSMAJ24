@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { TimeDirective } from '../time.directive';
+import { IArea } from '../itimetable';
 
 @Component({
   selector: 'tbody[break]',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TimeDirective],
   templateUrl: './break.component.html',
   styles: ``
 })
 export class BreakComponent {
-  @Input({ required: true }) areas!: number;
+  @Input({ alias: 'break', required: true }) title!: string;
   @Input({ required: true }) hours!: number[];
-  @Input({ required: true }) title!: string;
+  @Input({ required: true }) areas!: IArea[];
 }

@@ -1,0 +1,10 @@
+<tr *ngFor="let hour of hours; let i = index">
+  <th [time]="hour"></th>
+  <td
+    class="break"
+    *ngIf="i === 0"
+    [attr.rowspan]="hours.length"
+    [attr.colspan]="areas.length">
+    {{ title }}
+  </td>
+</tr>

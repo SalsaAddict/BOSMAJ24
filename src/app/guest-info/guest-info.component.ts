@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { IGuestInfo } from '../guest-info';
 import { CommonModule, TitleCasePipe } from '@angular/common';
-import { AuthService } from '../auth.service';
+import { SystemService } from '../system.service';
 import { GuestDetailComponent } from '../guest-detail/guest-detail.component';
 
 type GuestType = 'All' | 'Staff' | 'Guests';
@@ -27,7 +27,7 @@ type ReviewType = 'All' | 'Question' | 'Problem' | 'Random';
   encapsulation: ViewEncapsulation.None
 })
 export class GuestInfoComponent {
-  constructor(auth: AuthService) {
+  constructor(auth: SystemService) {
     auth
       .openEncryptedJsonFile<IGuestInfo[]>('assets/guestinfo.txt')
       .then((info) => {

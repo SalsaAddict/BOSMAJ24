@@ -1,18 +1,11 @@
-import { CommonModule, Time } from '@angular/common';
-import { Component } from '@angular/core';
-import {
-  FormsModule,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../auth.service';
-import { Day, IShow, ITimetable } from '../itimetable';
-import { SlotComponent } from '../slot/slot.component';
-import { SlotsComponent } from '../slots/slots.component';
-import { BreakComponent } from '../break/break.component';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { SystemService } from '../system.service';
+import { Day, IActivity, ITimetable } from './itimetable';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { BreakComponent } from './break/break.component';
+import { ActivitiesComponent } from './activities/activities.component';
+import { TimeDirective } from './time.directive';
 
 @Component({
   selector: 'app-timetable',
@@ -20,66 +13,132 @@ import { BreakComponent } from '../break/break.component';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
     BreakComponent,
-    SlotComponent,
-    SlotsComponent
+    ActivitiesComponent,
+    TimeDirective
   ],
   templateUrl: './timetable.component.html',
-  styles: ``
+  styleUrl: './timetable.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class TimetableComponent {
-  constructor(http: HttpClient, auth: AuthService) {
-    auth
+  private readonly activities: IActivity[] = [
+    {
+      AreaId: 'P',
+      Day: 'Fri',
+      Hour: 15,
+      Hours: 3,
+      Title: 'Pool Party',
+      Category: 'Party'
+    },
+    {
+      AreaId: 'P',
+      Day: 'Sat',
+      Hour: 15,
+      Hours: 3,
+      Title: 'Pool Party',
+      Category: 'Party'
+    },
+    {
+      AreaId: 'P',
+      Day: 'Sun',
+      Hour: 15,
+      Hours: 4,
+      Title: 'Pool Party',
+      Category: 'Party'
+    },
+    {
+      AreaId: 'S',
+      Day: 'Sat',
+      Hour: 10,
+      Hours: 1,
+      Title: 'Tech Rehearsal',
+      Subtitle: '(Performers Only)',
+      Category: 'Performance'
+    },
+    {
+      AreaId: 'S',
+      Day: 'Sat',
+      Hour: 18,
+      Hours: 1,
+      Title: 'Shows',
+      Category: 'Performance'
+    },
+    {
+      AreaId: 'S',
+      Day: 'Fri',
+      Hour: 17,
+      Hours: 1,
+      Title: 'Jack &amp; Jill',
+      Subtitle: 'Registration &amp; Sign-Up',
+      Description: '(Competitors Only)',
+      Category: 'Performance'
+    },
+    {
+      AreaId: 'S',
+      Day: 'Fri',
+      Hour: 18,
+      Hours: 1,
+      Title: 'Jack &amp; Jill',
+      Subtitle: 'Competition',
+      Category: 'Performance'
+    }
+  ];
+  constructor(private readonly system: SystemService) {
+    system
       .openEncryptedJsonFile<ITimetable>('assets/timetable.txt')
-      .then((timetable) => {
-        this.timetable = timetable;
-        this.timetable.Workshops.push({
-          Day: 'Fri',
-          Hour: 17,
-          AreaId: 'S',
-          Title: 'Jack & Jill',
-          Subtitle: 'Sign-Up & Briefing'
-        } as IShow);
-        this.timetable.Workshops.push({
-          Day: 'Fri',
-          Hour: 18,
-          AreaId: 'S',
-          Title: 'Jack & Jill',
-          Subtitle: 'Competition'
-        } as IShow);
-        this.timetable.Workshops.push({
-          Day: 'Sat',
-          Hour: 10,
-          AreaId: 'S',
-          Title: 'Tech Rehearsal',
-          Subtitle: '(Performers Only)'
-        } as IShow);
-        this.timetable.Workshops.push({
-          Day: 'Sat',
-          Hour: 18,
-          AreaId: 'S',
-          Title: 'SHOWTIME!'
-        } as IShow);
+      .then((teachers) => {
+        this.timetable = teachers;
+        this.timetable!.Items.push(...this.activities);
+        this.days.forEach((day) => {
+          let parties: IActivity[] = [
+            {
+              Day: day,
+              AreaId: 'M',
+              Hour: 22,
+              Hours: 4,
+              Title: 'Bachata Party',
+              Subtitle: '100% Bachata',
+              Category: 'Party'
+            },
+            {
+              Day: day,
+              AreaId: 'M',
+              Hour: 2,
+              Hours: 1,
+              Title: '50/50 Party',
+              Subtitle: 'Bachata &amp; Salsa',
+              Category: 'Party'
+            },
+            {
+              Day: day,
+              AreaId: 'R',
+              Hour: 22,
+              Hours: 4,
+              Title: 'Salsa Party',
+              Subtitle: '100% Salsa',
+              Category: 'Party'
+            },
+            {
+              Day: day,
+              AreaId: 'L',
+              Hour: 22,
+              Hours: 3,
+              Title: 'Latino Party',
+              Subtitle: 'Reggaeton &amp; More',
+              Category: 'Party'
+            }
+          ];
+          this.timetable!.Items.push(...parties);
+        });
       });
   }
   timetable?: ITimetable;
-  readonly options = new FormGroup({
-    day: new FormControl<Day>('Thu', [Validators.required])
-  });
-  get day() {
-    return this.options.value.day!;
+  readonly days: Day[] = ['Thu', 'Fri', 'Sat', 'Sun'];
+  set day(value: Day) {
+    this.system.localStorage.setItem('Day', value);
   }
-  readonly slots = {
-    am: [10, 11, 12],
-    pm: [15, 16, 17]
-  };
-  items(day: Day, hour: number, areaId: string) {
-    return this.timetable?.Workshops.filter((slot) => {
-      if (slot.Day !== day) return false;
-      if (slot.Hour !== hour) return false;
-      if (slot.AreaId !== areaId) return false;
-      return true;
-    });
+  get day() {
+    return (this.system.localStorage.getItem('Day') ?? 'Thu') as Day;
   }
 }

@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from './auth.service';
+import { SystemService } from './system.service';
 import { environment } from '../environments/environment';
 import { APP_BASE_HREF } from '@angular/common';
 
@@ -13,5 +13,5 @@ import { APP_BASE_HREF } from '@angular/common';
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
-  constructor(readonly auth: AuthService) {}
+  constructor(readonly auth: SystemService) {}
 }

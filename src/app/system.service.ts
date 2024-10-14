@@ -13,9 +13,9 @@ import {
 } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
-export class AuthService implements CanActivate {
+export class SystemService implements CanActivate {
   constructor(
-    @Inject(DOCUMENT) private readonly document: Document,
+    @Inject(DOCUMENT) readonly document: Document,
     private readonly http: HttpClient,
     private readonly router: Router
   ) {}
@@ -30,8 +30,11 @@ export class AuthService implements CanActivate {
       return false;
     }
   }
-  private get window() {
+  get window() {
     return this.document.defaultView!;
+  }
+  get localStorage() {
+    return this.window.localStorage;
   }
   private readonly secret = 'R0mulanWarb!rd';
   set password(value: string) {

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import CryptoJS from 'crypto-js';
-import { AuthService } from '../auth.service';
+import { SystemService } from '../system.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   invalid = false;
   constructor(
-    readonly auth: AuthService,
+    readonly auth: SystemService,
     private readonly http: HttpClient,
     private readonly router: Router
   ) {}

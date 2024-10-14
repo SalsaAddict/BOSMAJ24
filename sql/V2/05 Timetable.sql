@@ -22,7 +22,8 @@ VALUES
 	(N'M', N'Main Room', 1),
 	(N'R', N'Reception', 2),
 	(N'L', N'Lake Terrace', 3),
-	(N'S', N'Outdoor Stage', 4)
+	(N'S', N'Outdoor Stage', 4),
+	(N'P', N'Pool Area', 5)
 GO
 CREATE TABLE [Slot] (
 	[Date] DATE NOT NULL,
@@ -122,7 +123,7 @@ BEGIN
 					ORDER BY [Sort]
 					FOR JSON PATH
 				),
-			[Workshops] = (
+			[Items] = (
 					SELECT
 						[Day] = LEFT(DATENAME(weekday, [Date]), 3),
 						[Hour],

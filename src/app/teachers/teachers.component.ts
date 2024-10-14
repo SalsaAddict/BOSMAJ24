@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { SystemService } from '../system.service';
 import { CommonModule, JsonPipe, TitleCasePipe } from '@angular/common';
 import {
   FormGroup,
@@ -23,7 +23,7 @@ import {
   styles: ``
 })
 export class TeachersComponent {
-  constructor(http: HttpClient, auth: AuthService) {
+  constructor(http: HttpClient, auth: SystemService) {
     auth
       .openEncryptedJsonFile<any[]>('assets/teachers.txt')
       .then((teachers) => {
