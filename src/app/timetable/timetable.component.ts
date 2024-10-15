@@ -43,7 +43,7 @@ export class TimetableComponent {
     {
       AreaId: 'P',
       Day: 'Sun',
-      Hour: 15,
+      Hour: 18,
       Hours: 2,
       Title: 'Pool Party',
       Category: 'Party'
@@ -51,7 +51,7 @@ export class TimetableComponent {
     {
       AreaId: 'P',
       Day: 'Sun',
-      Hour: 17,
+      Hour: 15,
       Hours: 3,
       Title: 'Mega Pool Party',
       Subtitle: 'Dancing',
