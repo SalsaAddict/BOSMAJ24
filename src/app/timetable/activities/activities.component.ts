@@ -7,6 +7,7 @@ import {
   isWorkshop,
   ITimetable,
   ITimetableItem,
+  IWorkshop,
   toTime
 } from '../itimetable';
 import { CommonModule } from '@angular/common';

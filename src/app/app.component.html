@@ -1,37 +1,73 @@
-<nav class="navbar bg-dark bg-gradient fixed-top d-print-none navbar-expand shadow-lg" data-bs-theme="dark">
-    <div class="container-fluid">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-                <a class="nav-link" aria-current="page" [routerLink]="['/guestinfo']" routerLinkActive="active">
-                    <i class="bi-person-fill"></i>
-                    Guests
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" aria-current="page" [routerLink]="['/hotelinfo']" routerLinkActive="active">
-                    <i class="bi-house-fill"></i>
-                    Rooms
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" aria-current="page" [routerLink]="['/timetable']" routerLinkActive="active">
-                    <i class="bi-calendar-event-fill"></i>
-                    Timetable
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" aria-current="page" [routerLink]="['/teachers']" routerLinkActive="active">
-                    <i class="bi-mortarboard-fill"></i>
-                    Teachers
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#" (click)="auth.logout()">
-                    <i class="bi-box-arrow-right"></i>
-                    Logout
-                </a>
-            </li>
-        </ul>
-    </div>
+<nav
+  class="navbar bg-dark bg-gradient fixed-top d-print-none navbar-expand shadow-lg"
+  data-bs-theme="dark">
+  <div class="container-fluid">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      @if (auth.loggedIn){
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          aria-current="page"
+          [routerLink]="['/guestinfo']"
+          routerLinkActive="active">
+          <i class="bi-person-fill"></i>
+          Guests
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          aria-current="page"
+          [routerLink]="['/hotelinfo']"
+          routerLinkActive="active">
+          <i class="bi-house-fill"></i>
+          Rooms
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          aria-current="page"
+          [routerLink]="['/teachers']"
+          routerLinkActive="active">
+          <i class="bi-mortarboard-fill"></i>
+          Teachers
+        </a>
+      </li>
+      }
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          aria-current="page"
+          [routerLink]="['/timetable']"
+          routerLinkActive="active">
+          <i class="bi-calendar-event-fill"></i>
+          Timetable
+        </a>
+      </li>
+    </ul>
+    <ul class="navbar-nav mb-2 mb-lg-0" [ngSwitch]="auth.loggedIn">
+      <li class="nav-item" *ngSwitchCase="false">
+        <a
+          class="nav-link"
+          aria-current="page"
+          [routerLink]="['/login']"
+          routerLinkActive="active">
+          <i class="bi-box-arrow-in-left"></i>
+          Login
+        </a>
+      </li>
+      <li class="nav-item" *ngSwitchCase="true">
+        <a
+          class="nav-link"
+          aria-current="page"
+          href="#"
+          (click)="auth.logout()">
+          <i class="bi-box-arrow-right"></i>
+          Logout
+        </a>
+      </li>
+    </ul>
+  </div>
 </nav>
 <router-outlet />

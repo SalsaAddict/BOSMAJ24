@@ -46,6 +46,9 @@ export class SystemService implements CanActivate {
       this.secret
     );
   }
+  get loggedIn() {
+    return !!this.password;
+  }
   logout() {
     this.window.localStorage.removeItem('data');
     this.router.navigate(['/login']);

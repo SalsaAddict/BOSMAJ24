@@ -22,7 +22,7 @@
   </td>
   } @else {
   <td class="row m-0">
-    @for (item of items; track item.AreaId) {
+    @for (item of items; track getTitle(item)) {
     <div class="col p-1" [style.background-image]="bgImage(item)">
       @let subtitle = getSubtitle(item); @let description =
       getDescription(item);

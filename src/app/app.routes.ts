@@ -20,13 +20,12 @@ export const routes: Routes = [
   },
   {
     path: 'timetable',
-    component: TimetableComponent,
-    canActivate: [SystemService]
+    component: TimetableComponent
   },
   {
     path: 'teachers',
     component: TeachersComponent,
     canActivate: [SystemService]
   },
-  { path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/timetable' }
 ];

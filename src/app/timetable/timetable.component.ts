@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { BreakComponent } from './break/break.component';
 import { ActivitiesComponent } from './activities/activities.component';
 import { TimeDirective } from './time.directive';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-timetable',
@@ -94,54 +95,55 @@ export class TimetableComponent {
       Category: 'Performance'
     }
   ];
-  constructor(private readonly system: SystemService) {
-    system
-      .openEncryptedJsonFile<ITimetable>('assets/timetable.txt')
-      .then((teachers) => {
-        this.timetable = teachers;
-        this.timetable!.Items.push(...this.activities);
-        this.days.forEach((day) => {
-          let parties: IActivity[] = [
-            {
-              Day: day,
-              AreaId: 'M',
-              Hour: 22,
-              Hours: 4,
-              Title: 'Bachata Party',
-              Subtitle: '100% Bachata',
-              Category: 'Party'
-            },
-            {
-              Day: day,
-              AreaId: 'M',
-              Hour: 2,
-              Hours: 1,
-              Title: '50/50 Party',
-              Subtitle: 'Bachata &amp; Salsa',
-              Category: 'Party'
-            },
-            {
-              Day: day,
-              AreaId: 'R',
-              Hour: 22,
-              Hours: 4,
-              Title: 'Salsa Party',
-              Subtitle: '100% Salsa',
-              Category: 'Party'
-            },
-            {
-              Day: day,
-              AreaId: 'L',
-              Hour: 22,
-              Hours: 3,
-              Title: 'Latino Party',
-              Subtitle: 'Reggaeton &amp; More',
-              Category: 'Party'
-            }
-          ];
-          this.timetable!.Items.push(...parties);
-        });
+  constructor(
+    private readonly http: HttpClient,
+    private readonly system: SystemService
+  ) {
+    http.get<ITimetable>('assets/timetable.json').subscribe((teachers) => {
+      this.timetable = teachers;
+      this.timetable!.Items.push(...this.activities);
+      this.days.forEach((day) => {
+        let parties: IActivity[] = [
+          {
+            Day: day,
+            AreaId: 'M',
+            Hour: 22,
+            Hours: 4,
+            Title: 'Bachata Party',
+            Subtitle: '100% Bachata',
+            Category: 'Party'
+          },
+          {
+            Day: day,
+            AreaId: 'M',
+            Hour: 2,
+            Hours: 1,
+            Title: '50/50 Party',
+            Subtitle: 'Bachata &amp; Salsa',
+            Category: 'Party'
+          },
+          {
+            Day: day,
+            AreaId: 'R',
+            Hour: 22,
+            Hours: 4,
+            Title: 'Salsa Party',
+            Subtitle: '100% Salsa',
+            Category: 'Party'
+          },
+          {
+            Day: day,
+            AreaId: 'L',
+            Hour: 22,
+            Hours: 3,
+            Title: 'Latino Party',
+            Subtitle: 'Reggaeton &amp; More',
+            Category: 'Party'
+          }
+        ];
+        this.timetable!.Items.push(...parties);
       });
+    });
   }
   timetable?: ITimetable;
   readonly days: Day[] = ['Thu', 'Fri', 'Sat', 'Sun'];

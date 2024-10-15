@@ -20,6 +20,7 @@ json = JSON.parse(content);
 encrypted = cryptojs.AES.encrypt(JSON.stringify(json), password).toString();
 fs.writeFileSync('../src/assets/guestinfo.txt', encrypted, { encoding: 'utf8' });
 
+/*
 content = fs.readFileSync('timetable.json').toString();
 if (content.startsWith(UTF8_BOM)) {
     content = content.substring(UTF8_BOM.length);
@@ -27,6 +28,7 @@ if (content.startsWith(UTF8_BOM)) {
 json = JSON.parse(content);
 encrypted = cryptojs.AES.encrypt(JSON.stringify(json), password).toString();
 fs.writeFileSync('../src/assets/timetable.txt', encrypted, { encoding: 'utf8' });
+*/
 
 content = fs.readFileSync('teachers.json').toString();
 if (content.startsWith(UTF8_BOM)) {
