@@ -41,8 +41,12 @@ export class TeachersComponent {
           return teacher.TeacherCount === 0;
         case '1':
           return teacher.TeacherCount === 1;
-        case '2+':
-          return teacher.TeacherCount > 1;
+        case '2':
+          return teacher.TeacherCount === 2;
+        case '3':
+          return teacher.TeacherCount === 3;
+        case '4+':
+          return teacher.TeacherCount >= 4;
         default:
           return true;
       }

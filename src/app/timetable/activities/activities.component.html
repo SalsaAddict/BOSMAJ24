@@ -7,7 +7,10 @@
   } @else { @let items = slot(hour, area); @if (items.length === 1) { @let item
   = items[0]; @let subtitle = getSubtitle(item); @let description =
   getDescription(item);
-  <td [style.background-image]="bgImage(item)" [attr.rowspan]="rowspan(item)">
+  <td
+    [style.background-image]="bgImage(item)"
+    [attr.rowspan]="rowspan(item)"
+    class="p-1">
     <p class="m-0">
       <b [innerHtml]="getTitle(item)"></b>
     </p>
@@ -15,6 +18,23 @@
     <p class="m-0" [innerHtml]="subtitle"></p>
     } @if (description) {
     <p class="m-0" [innerHtml]="description"></p>
+    }
+  </td>
+  } @else {
+  <td class="row m-0">
+    @for (item of items; track item.AreaId) {
+    <div class="col p-1" [style.background-image]="bgImage(item)">
+      @let subtitle = getSubtitle(item); @let description =
+      getDescription(item);
+      <p class="m-0">
+        <b [innerHtml]="getTitle(item)"></b>
+      </p>
+      @if (subtitle) {
+      <p class="m-0" [innerHtml]="subtitle"></p>
+      } @if (description) {
+      <p class="m-0" [innerHtml]="description"></p>
+      }
+    </div>
     }
   </td>
   } } } }

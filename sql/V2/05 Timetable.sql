@@ -113,7 +113,7 @@ BEGIN
 						[GenreId]
 					FROM [Workshop] w
 						JOIN [Level] l ON w.[LevelId] = l.[Id]
-					ORDER BY [Date], [Hour]
+					ORDER BY [Date], [Hour], [LevelId] DESC
 					FOR JSON PATH
 				)
 		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
