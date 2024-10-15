@@ -59,7 +59,7 @@ export class TimetableComponent {
       Category: 'Party'
     },
     {
-      AreaId: 'S',
+      AreaId: 'M',
       Day: 'Sat',
       Hour: 10,
       Hours: 1,
@@ -68,7 +68,7 @@ export class TimetableComponent {
       Category: 'Performance'
     },
     {
-      AreaId: 'S',
+      AreaId: 'M',
       Day: 'Sat',
       Hour: 18,
       Hours: 2,
@@ -86,7 +86,7 @@ export class TimetableComponent {
       Category: 'Performance'
     },
     {
-      AreaId: 'S',
+      AreaId: 'M',
       Day: 'Fri',
       Hour: 18,
       Hours: 2,
