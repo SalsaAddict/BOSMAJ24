@@ -26,6 +26,14 @@ export class TimetableComponent {
   private readonly activities: IActivity[] = [
     {
       AreaId: 'P',
+      Day: 'Thu',
+      Hour: 15,
+      Hours: 5,
+      Title: 'Pool Party',
+      Category: 'Party'
+    },
+    {
+      AreaId: 'P',
       Day: 'Fri',
       Hour: 15,
       Hours: 3,
