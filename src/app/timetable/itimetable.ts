@@ -1,3 +1,5 @@
+import { Activity, Genre } from '../color';
+
 export interface ITimetable {
   Days: IDay[];
   Areas: IArea[];
@@ -25,6 +27,7 @@ export interface IWorkshop extends ITimetableItem {
   LevelId: number;
   Level: string;
   GenreId: GenreId;
+  Genre: keyof typeof Genre;
 }
 export function isWorkshop(item: ITimetableItem): item is IWorkshop {
   return (item as IWorkshop).Act !== undefined;
@@ -34,7 +37,7 @@ export interface IActivity extends ITimetableItem {
   Subtitle?: string;
   Description?: string;
   Hours: number;
-  Category?: 'Performance' | 'Party';
+  Category: keyof typeof Activity;
 }
 export function isActivity(item: ITimetableItem): item is IActivity {
   return !isWorkshop(item);

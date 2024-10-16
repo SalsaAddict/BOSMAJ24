@@ -25,9 +25,13 @@ export const routes: Routes = [
     title: title('Guests')
   },
   {
-    path: 'timetable',
+    path: 'timetable/:day',
     component: TimetableComponent,
     title: title('Timetable')
+  },
+  {
+    path: 'timetable',
+    redirectTo: 'timetable/thu'
   },
   {
     path: 'teachers',

@@ -2,18 +2,24 @@
   <div class="text-center">
     <div class="btn-group">
       <ng-template ngFor let-item [ngForOf]="days" let-i="index">
-        <input
-          type="radio"
-          class="btn-check"
-          [(ngModel)]="day"
-          [value]="item"
-          [attr.id]="'count' + i" />
-        <label
+        <a
           class="btn btn-outline-secondary text-uppercase"
-          [attr.for]="'count' + i">
+          [routerLink]="['/timetable', item.toLowerCase()]"
+          routerLinkActive="active">
           {{ item }}
-        </label>
+        </a>
       </ng-template>
+    </div>
+    <br /><br />
+    <div class="container-fluid">
+      <div class="row" style="font-size: small">
+        <div
+          *ngFor="let category of categories"
+          class="col text-black text-uppercase p-2"
+          [style.background-image]="bgImage(category, 0.5)">
+          <b>{{ category }}</b>
+        </div>
+      </div>
     </div>
   </div>
   <br />

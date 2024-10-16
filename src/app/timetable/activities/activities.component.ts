@@ -12,8 +12,9 @@ import {
 } from '../itimetable';
 import { CommonModule } from '@angular/common';
 import { TimeDirective } from '../time.directive';
+import { Color } from '../../color';
 
-type SlotType = 'Closed' | 'Activity' | 'Workshops';
+export type SlotType = 'Closed' | 'Activity' | 'Workshops';
 
 @Component({
   selector: 'tbody[activities]',
@@ -69,38 +70,7 @@ export class ActivitiesComponent {
   }
   bgImage(item: ITimetableItem | ITimetableItem[]) {
     if (Array.isArray(item)) return;
-    let rgb: [number, number, number];
-    let a: number;
-    if (isWorkshop(item)) {
-      switch (item.GenreId) {
-        case 'B':
-          rgb = [100, 255, 150];
-          break;
-        case 'S':
-          rgb = [140, 200, 255];
-          break;
-        case 'O':
-          rgb = [180, 100, 255];
-          break;
-        default:
-          return;
-      }
-      a = (item.LevelId + 1) * 0.2;
-    } else {
-      switch ((item as IActivity).Category) {
-        case 'Party':
-          rgb = [255, 220, 80];
-          break;
-        case 'Performance':
-          rgb = [255, 150, 127];
-          break;
-        default:
-          return;
-      }
-      a = 1;
-    }
-    return `radial-gradient(circle, rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${
-      a - 0.1
-    }), rgba(${rgb[0] - 50}, ${rgb[1] - 50}, ${rgb[2] - 50}, ${a}))`;
+    let color = Color.itemBackgroundImage(item);
+    return color;
   }
 }

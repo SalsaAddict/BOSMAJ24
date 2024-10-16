@@ -111,9 +111,11 @@ BEGIN
 						[Title],
 						[LevelId],
 						[Level] = l.[Description],
-						[GenreId]
+						[GenreId],
+						[Genre] = g.[Description]
 					FROM [Workshop] w
 						JOIN [Level] l ON w.[LevelId] = l.[Id]
+						JOIN [Genre] g ON w.[GenreId] = g.[Id]
 					ORDER BY [Date], [Hour], [LevelId] DESC
 					FOR JSON PATH
 				)
