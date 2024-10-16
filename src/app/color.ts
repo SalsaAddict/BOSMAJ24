@@ -41,7 +41,6 @@ export class Color {
     return this.radialGradient(Colors[category], opacity);
   }
   static itemBackgroundImage(item: ITimetableItem) {
-    console.debug(item);
     let category = isWorkshop(item)
         ? item.Genre
         : (item as IActivity).Category!,

@@ -6,8 +6,4 @@ body {
   html {
     font-size: 0.75rem;
   }
-  @page {
-    size: A4 landscape;
-    margin: 0.25in;
-  }
 }
