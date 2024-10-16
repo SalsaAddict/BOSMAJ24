@@ -27,8 +27,8 @@ export class TimetableComponent {
     {
       AreaId: 'P',
       Day: 'Thu',
-      Hour: 15,
-      Hours: 5,
+      Hour: 16,
+      Hours: 3,
       Title: 'Pool Party',
       Category: 'Party'
     },
@@ -51,7 +51,7 @@ export class TimetableComponent {
     {
       AreaId: 'P',
       Day: 'Sun',
-      Hour: 18,
+      Hour: 14,
       Hours: 2,
       Title: 'Pool Party',
       Category: 'Party'
@@ -59,8 +59,8 @@ export class TimetableComponent {
     {
       AreaId: 'P',
       Day: 'Sun',
-      Hour: 15,
-      Hours: 3,
+      Hour: 16,
+      Hours: 4,
       Title: 'Mega Pool Party',
       Subtitle: 'Dancing',
       Description: 'Animations &amp; Craziness',
@@ -69,7 +69,7 @@ export class TimetableComponent {
     {
       AreaId: 'M',
       Day: 'Sat',
-      Hour: 10,
+      Hour: 14,
       Hours: 1,
       Title: 'Tech Rehearsal',
       Subtitle: '(Performers Only)',

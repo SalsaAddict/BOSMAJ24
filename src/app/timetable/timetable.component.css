@@ -20,6 +20,5 @@ table.timetable {
   }
   td.break {
     background-image: radial-gradient(circle, #eee, #ddd, #aaa);
-    font-weight: bold;
   }
 }

@@ -26,7 +26,6 @@ export class ActivitiesComponent {
   @Input({ alias: 'activities', required: true }) timetable!: ITimetable;
   @Input({ required: true }) day!: Day;
   @Input({ required: true }) hours!: number[];
-  @Input({ required: true }) pool!: { [day: string]: number };
   slot(hour: number, area: IArea) {
     return this.timetable.Items.filter((item) => {
       if (item.AreaId !== area.Id) return false;

@@ -5,6 +5,11 @@
     *ngIf="i === 0"
     [attr.rowspan]="hours.length"
     [attr.colspan]="areas.length">
-    {{ title }}
+    <p class="m-0">
+      <b>{{ title }}</b>
+    </p>
+    <p class="m-0" *ngIf="subtitle">
+      {{ subtitle }}
+    </p>
   </td>
 </tr>

@@ -12,6 +12,7 @@ import { IArea } from '../itimetable';
 })
 export class BreakComponent {
   @Input({ alias: 'break', required: true }) title!: string;
+  @Input() subtitle?: string;
   @Input({ required: true }) hours!: number[];
   @Input({ required: true }) areas!: IArea[];
 }

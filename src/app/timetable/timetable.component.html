@@ -27,26 +27,32 @@
     <ng-container *ngIf="day !== 'Thu'">
       <tbody
         break="Breakfast"
+        subtitle="(Served 08:00 &ndash; 11:00)"
         [hours]="[8, 9]"
         [areas]="timetable.Areas"></tbody>
       <tbody
         [activities]="timetable"
         [day]="day"
-        [hours]="[10, 11, 12]"
-        [pool]="{}"></tbody>
-      <tbody break="Lunch" [hours]="[13, 14]" [areas]="timetable.Areas"></tbody>
+        [hours]="[10, 11, 12]"></tbody>
+      <tbody
+        break="Lunch"
+        subtitle="(Served 13:00 &ndash; 15:00)"
+        [hours]="[13]"
+        [areas]="timetable.Areas"></tbody>
     </ng-container>
     <tbody
       [activities]="timetable"
       [day]="day"
-      [hours]="[15, 16, 17, 18, 19]"
-      [pool]="{}"></tbody>
-    <tbody break="Dinner" [hours]="[20, 21]" [areas]="timetable.Areas"></tbody>
+      [hours]="[14, 15, 16, 17, 18, 19]"></tbody>
+    <tbody
+      break="Dinner"
+      subtitle="(Served 20:00 &ndash; 22:00)"
+      [hours]="[20, 21]"
+      [areas]="timetable.Areas"></tbody>
     <tbody
       [activities]="timetable"
       [day]="day"
-      [hours]="[22, 23, 0, 1, 2]"
-      [pool]="{}"></tbody>
+      [hours]="[22, 23, 0, 1, 2]"></tbody>
     <tbody break="Close" [hours]="[3]" [areas]="timetable.Areas"></tbody>
   </table>
 </div>
