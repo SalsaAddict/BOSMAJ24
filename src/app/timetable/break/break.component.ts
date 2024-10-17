@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { TimeDirective } from '../time.directive';
-import { IArea } from '../itimetable';
+import { IArea } from '../../itimetable';
 
 @Component({
   selector: 'tbody[break]',

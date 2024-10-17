@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Directive, ElementRef, Input, numberAttribute } from '@angular/core';
-import { toTime } from './itimetable';
+import { toTime } from '../itimetable';
 
 @Directive({
   selector: '[time]',

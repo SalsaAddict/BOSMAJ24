@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { SystemService } from './system.service';
 import { TimetableComponent } from './timetable/timetable.component';
 import { TeachersComponent } from './teachers/teachers.component';
+import { MobileComponent } from './mobile/mobile.component';
 
 function title(text: string) {
   return `BOS Majorca 2024 - ${text}`;
@@ -32,6 +33,11 @@ export const routes: Routes = [
   {
     path: 'timetable',
     redirectTo: 'timetable/thu'
+  },
+  {
+    path: 'mobile',
+    component: MobileComponent,
+    title: title('Timetable')
   },
   {
     path: 'teachers',

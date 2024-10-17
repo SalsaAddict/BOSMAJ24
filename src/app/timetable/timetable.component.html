@@ -14,7 +14,7 @@
     <div class="container-fluid">
       <div class="row" style="font-size: small">
         <div
-          *ngFor="let category of categories"
+          *ngFor="let category of timetable!.Categories"
           class="col text-black text-uppercase p-2"
           [style.background-image]="bgImage(category, 0.5)">
           <b>{{ category }}</b>

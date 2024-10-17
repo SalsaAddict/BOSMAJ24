@@ -11,6 +11,7 @@ import {
   Router,
   RouterStateSnapshot
 } from '@angular/router';
+import { ITimetable } from './itimetable';
 
 @Injectable({ providedIn: 'root' })
 export class SystemService implements CanActivate {

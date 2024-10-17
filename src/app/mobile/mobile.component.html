@@ -1,0 +1,82 @@
+<div class="container-fluid text-uppercase text-center" *ngIf="timetable">
+  <div class="btn-group w-100 mb-3">
+    <button
+      *ngFor="let item of days"
+      type="button"
+      class="btn btn-outline-secondary"
+      [class.active]="item === day"
+      (click)="setDay(item)">
+      {{ item.day | uppercase }}
+    </button>
+  </div>
+  <div class="d-flex justify-content-center align-items-center mb-3">
+    <div>
+      <div class="input-group input-group-lg">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="hour = hour - 1"
+          [disabled]="hour === start">
+          <i class="bi-caret-left-fill"></i>
+        </button>
+        <div class="input-group-text border-secondary text-bg-dark">
+          <b [innerHTML]="time(hour)"></b>
+        </div>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="hour = hour + 1"
+          [disabled]="hour === end">
+          <i class="bi-caret-right-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row m-0 mb-3" style="font-size: small">
+    <div
+      *ngFor="let category of timetable!.Categories | slice : 0 : 3"
+      class="col text-black text-uppercase p-2"
+      [style.background-image]="bgImage(category)">
+      <b>{{ category }}</b>
+    </div>
+  </div>
+  <div *ngIf="meal(hour)" class="card mb-3 shadow">
+    <div class="card-header text-bg-warning text-center">
+      <i class="bi-alarm-fill"></i>
+      <b class="mx-2">{{ meal(hour)!.title }}</b>
+      <i class="bi-alarm-fill"></i>
+    </div>
+    <div class="card-body p-2">
+      Served
+      <span [innerHTML]="time(meal(hour)!.hour, meal(hour)!.hours)"></span>
+    </div>
+  </div>
+  @let count = getItems(day.day, hour).length; @if (count > 0){ @for (area of
+  timetable.Areas; track area.Id) { @let items = getItems(day.day, hour,
+  area.Id); @if(items.length > 0) {
+  <div class="card mb-3 shadow">
+    <div class="card-header text-bg-dark">
+      <b>{{ area.Description }}</b>
+    </div>
+    @for (item of items; track getTitle(item)) { @let subtitle =
+    getSubtitle(item); @let description = getDescription(item);
+    <div class="card-body p-2" [style.background-image]="bgImage(item)">
+      <p class="m-0">
+        <b [innerHtml]="getTitle(item)"></b>
+      </p>
+      @if (subtitle) {
+      <p class="m-0" [innerHtml]="subtitle"></p>
+      } @if (description) {
+      <p class="m-0" [innerHtml]="description"></p>
+      }
+    </div>
+    }
+  </div>
+  } } }@else { @if (!meal(hour)) {
+  <div class="border border-secondary rounded shadow p-2 text-bg-secondary">
+    <i class="bi-cup-hot-fill"></i>
+    <b class="mx-2">Chillout & Social Time!</b>
+    <i class="bi-cup-hot-fill"></i>
+  </div>
+  }}
+</div>

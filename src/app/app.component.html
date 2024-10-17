@@ -1,5 +1,5 @@
 <nav
-  class="navbar bg-dark bg-gradient fixed-top d-print-none navbar-expand shadow-lg"
+  class="navbar bg-dark bg-gradient fixed-top d-print-none navbar-expand shadow-lg noprint"
   data-bs-theme="dark">
   <div class="container-fluid">
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -42,7 +42,17 @@
           [routerLink]="['/timetable']"
           routerLinkActive="active">
           <i class="bi-calendar-event-fill"></i>
-          Timetable
+          Desktop
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          aria-current="page"
+          [routerLink]="['/mobile']"
+          routerLinkActive="active">
+          <i class="bi-calendar-event-fill"></i>
+          Mobile
         </a>
       </li>
     </ul>

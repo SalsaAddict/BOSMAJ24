@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import {
-  Day,
   IActivity,
   IArea,
   isActivity,
@@ -9,7 +8,7 @@ import {
   ITimetableItem,
   IWorkshop,
   toTime
-} from '../itimetable';
+} from '../../itimetable';
 import { CommonModule } from '@angular/common';
 import { TimeDirective } from '../time.directive';
 import { Color } from '../../color';
@@ -25,7 +24,7 @@ export type SlotType = 'Closed' | 'Activity' | 'Workshops';
 })
 export class ActivitiesComponent {
   @Input({ alias: 'activities', required: true }) timetable!: ITimetable;
-  @Input({ required: true }) day!: Day;
+  @Input({ required: true }) day!: string;
   @Input({ required: true }) hours!: number[];
   slot(hour: number, area: IArea) {
     return this.timetable.Items.filter((item) => {

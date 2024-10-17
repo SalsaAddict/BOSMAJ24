@@ -1,21 +1,21 @@
-import { Activity, Genre } from '../color';
+import { Activity, Category, Genre } from './color';
 
 export interface ITimetable {
   Days: IDay[];
   Areas: IArea[];
   Items: ITimetableItem[];
+  Categories: Category[];
 }
-export type Day = 'Thu' | 'Fri' | 'Sat' | 'Sun';
 export interface IDay {
   Date: Date;
-  Day: Day;
+  Day: string;
 }
 export interface IArea {
   Id: string;
   Description: String;
 }
 export interface ITimetableItem {
-  Day: Day;
+  Day: string;
   Hour: number;
   AreaId: string;
 }

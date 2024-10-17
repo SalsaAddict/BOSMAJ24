@@ -22,6 +22,13 @@
       "request": "launch",
       "script": "${workspaceFolder}/sql/refresh.ps1",
       "cwd": "${workspaceFolder}/sql"
+    },
+    {
+      "name": "Export Timetable",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/sql/exportTimetable.ps1",
+      "cwd": "${workspaceFolder}"
     }
   ]
 }

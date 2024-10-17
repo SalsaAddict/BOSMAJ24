@@ -1,14 +1,14 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { SystemService } from '../system.service';
-import { Day, IActivity, ITimetable } from './itimetable';
+import { ITimetable } from '../itimetable';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { BreakComponent } from './break/break.component';
 import { ActivitiesComponent } from './activities/activities.component';
 import { TimeDirective } from './time.directive';
-import { HttpClient } from '@angular/common/http';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { Category, Color, Genre } from '../color';
+import { Category, Color } from '../color';
+import { Timetable } from '../timetable';
 
 @Component({
   selector: 'app-timetable',
@@ -28,147 +28,21 @@ import { Category, Color, Genre } from '../color';
   encapsulation: ViewEncapsulation.None
 })
 export class TimetableComponent {
-  private readonly activities: IActivity[] = [
-    {
-      AreaId: 'P',
-      Day: 'Thu',
-      Hour: 16,
-      Hours: 3,
-      Title: 'Pool Party',
-      Category: 'Party'
-    },
-    {
-      AreaId: 'P',
-      Day: 'Fri',
-      Hour: 15,
-      Hours: 3,
-      Title: 'Pool Party',
-      Category: 'Party'
-    },
-    {
-      AreaId: 'P',
-      Day: 'Sat',
-      Hour: 15,
-      Hours: 3,
-      Title: 'Pool Party',
-      Category: 'Party'
-    },
-    {
-      AreaId: 'P',
-      Day: 'Sun',
-      Hour: 14,
-      Hours: 2,
-      Title: 'Pool Party',
-      Category: 'Party'
-    },
-    {
-      AreaId: 'P',
-      Day: 'Sun',
-      Hour: 16,
-      Hours: 4,
-      Title: 'Mega Pool Party',
-      Subtitle: 'Dancing',
-      Description: 'Animations &amp; Craziness',
-      Category: 'Party'
-    },
-    {
-      AreaId: 'M',
-      Day: 'Sat',
-      Hour: 14,
-      Hours: 1,
-      Title: 'Tech Rehearsal',
-      Subtitle: '(Performers Only)',
-      Category: 'Performance'
-    },
-    {
-      AreaId: 'M',
-      Day: 'Sat',
-      Hour: 18,
-      Hours: 2,
-      Title: 'Shows',
-      Category: 'Performance'
-    },
-    {
-      AreaId: 'S',
-      Day: 'Fri',
-      Hour: 17,
-      Hours: 1,
-      Title: 'Jack &amp; Jill',
-      Subtitle: 'Registration &amp; Sign-Up',
-      Description: '(Competitors Only)',
-      Category: 'Performance'
-    },
-    {
-      AreaId: 'M',
-      Day: 'Fri',
-      Hour: 18,
-      Hours: 2,
-      Title: 'Jack &amp; Jill',
-      Subtitle: 'Competition',
-      Category: 'Performance'
-    }
-  ];
   constructor(
-    readonly http: HttpClient,
     private readonly system: SystemService,
     private readonly titleCase: TitleCasePipe
   ) {
-    http.get<ITimetable>('assets/timetable.json').subscribe((teachers) => {
-      this.timetable = teachers;
-      this.timetable!.Items.push(...this.activities);
-      this.days.forEach((day) => {
-        let parties: IActivity[] = [
-          {
-            Day: day,
-            AreaId: 'M',
-            Hour: 22,
-            Hours: 4,
-            Title: 'Bachata Party',
-            Subtitle: '100% Bachata',
-            Category: 'Party'
-          },
-          {
-            Day: day,
-            AreaId: 'M',
-            Hour: 2,
-            Hours: 1,
-            Title: '50/50 Party',
-            Subtitle: 'Bachata &amp; Salsa',
-            Category: 'Party'
-          },
-          {
-            Day: day,
-            AreaId: 'R',
-            Hour: 22,
-            Hours: 4,
-            Title: 'Salsa Party',
-            Subtitle: '100% Salsa',
-            Category: 'Party'
-          },
-          {
-            Day: day,
-            AreaId: 'L',
-            Hour: 22,
-            Hours: 3,
-            Title: 'Latino Party',
-            Subtitle: 'Reggaeton &amp; More',
-            Category: 'Party'
-          }
-        ];
-        this.timetable!.Items.push(...parties);
-      });
+    Timetable.open().then((timetable) => {
+      this.timetable = timetable;
     });
   }
   timetable?: ITimetable;
-  readonly days: Day[] = ['Thu', 'Fri', 'Sat', 'Sun'];
-  @Input() set day(value: Day) {
+  readonly days: string[] = ['Thu', 'Fri', 'Sat', 'Sun'];
+  @Input() set day(value: string) {
     this.system.localStorage.setItem('Day', this.titleCase.transform(value));
   }
   get day() {
-    return (this.system.localStorage.getItem('Day') ?? 'Thu') as Day;
-  }
-  get categories(): Category[] {
-    return ['Bachata', 'Salsa', 'Other', 'Party', 'Performance'];
+    return this.system.localStorage.getItem('Day') ?? 'Thu';
   }
   bgImage(category: Category, opacity: number) {
     return Color.backgroundImage(category, opacity);

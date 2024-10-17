@@ -1,4 +1,4 @@
-import { IActivity, isWorkshop, ITimetableItem } from './timetable/itimetable';
+import { IActivity, isWorkshop, ITimetableItem } from './itimetable';
 
 export type RGB = [number, number, number];
 
