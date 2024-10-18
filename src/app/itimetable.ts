@@ -9,6 +9,8 @@ export interface ITimetable {
 export interface IDay {
   Date: Date;
   Day: string;
+  Start: number;
+  End: number;
 }
 export interface IArea {
   Id: string;

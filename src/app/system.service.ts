@@ -74,4 +74,7 @@ export class SystemService implements CanActivate {
     let data = this.decrypt(encrypted, this.password!);
     return JSON.parse(data);
   }
+  get isPortrait() {
+    return this.window.innerHeight > this.window.innerWidth;
+  }
 }

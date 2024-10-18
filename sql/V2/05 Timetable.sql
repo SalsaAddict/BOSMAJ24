@@ -90,7 +90,9 @@ BEGIN
 			[Days] = (
 					SELECT
 						[Date],
-						[Day] = LEFT(DATENAME(weekday, [Date]), 3)
+						[Day] = LEFT(DATENAME(weekday, [Date]), 3),
+						[Start] = CASE WHEN [Offset] = 0 THEN 16 ELSE 8 END,
+						[End] = 26
 					FROM (VALUES (0), (1), (2), (3)) o ([Offset])
 						CROSS APPLY (VALUES (DATEADD(day, [Offset], CONVERT(DATE, N'2024-10-31')))) dte ([Date])
 					ORDER BY [Date]

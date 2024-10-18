@@ -1,17 +1,18 @@
 <div class="container-fluid text-uppercase text-center" *ngIf="timetable">
   <div class="btn-group w-100 mb-3">
     <button
-      *ngFor="let item of days"
+      *ngFor="let item of timetable.Days"
       type="button"
       class="btn btn-outline-secondary"
       [class.active]="item === day"
       (click)="setDay(item)">
-      {{ item.day | uppercase }}
+      {{ item.Day | uppercase }}
     </button>
   </div>
-  <div class="d-flex justify-content-center align-items-center mb-3">
+  <div
+    class="d-flex justify-content-center align-items-center flex-nowrap mb-3">
     <div>
-      <div class="input-group input-group-lg">
+      <div class="input-group">
         <button
           type="button"
           class="btn btn-outline-secondary"
@@ -31,6 +32,13 @@
         </button>
       </div>
     </div>
+    <button
+      type="button"
+      class="btn btn-outline-secondary ms-2"
+      (click)="setNow()">
+      <i class="bi-clock-history me-2"></i>
+      Now
+    </button>
   </div>
   <div class="row m-0 mb-3" style="font-size: small">
     <div
@@ -51,8 +59,8 @@
       <span [innerHTML]="time(meal(hour)!.hour, meal(hour)!.hours)"></span>
     </div>
   </div>
-  @let count = getItems(day.day, hour).length; @if (count > 0){ @for (area of
-  timetable.Areas; track area.Id) { @let items = getItems(day.day, hour,
+  @let count = getItems(day.Day, hour).length; @if (count > 0){ @for (area of
+  timetable.Areas; track area.Id) { @let items = getItems(day.Day, hour,
   area.Id); @if(items.length > 0) {
   <div class="card mb-3 shadow">
     <div class="card-header text-bg-dark">

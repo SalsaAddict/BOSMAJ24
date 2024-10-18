@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import {
   IActivity,
+  IDay,
   isActivity,
   isWorkshop,
   ITimetable,
@@ -10,12 +11,6 @@ import {
 } from '../itimetable';
 import { Category, Color } from '../color';
 import { Timetable } from '../timetable';
-
-interface IDayInfo {
-  day: string;
-  start: number;
-  end: number;
-}
 
 interface IMealInfo {
   title: string;
@@ -35,24 +30,34 @@ export class MobileComponent {
   constructor(readonly http: HttpClient, private readonly datePipe: DatePipe) {
     Timetable.open().then((timetable) => {
       this.timetable = timetable;
+      this.setNow();
     });
-    this.setDay(this.days[0]);
   }
   timetable?: ITimetable;
-  readonly days: IDayInfo[] = [
-    { day: 'Thu', start: 16, end: 26 },
-    { day: 'Fri', start: 8, end: 26 },
-    { day: 'Sat', start: 8, end: 26 },
-    { day: 'Sun', start: 8, end: 26 }
-  ];
-  day!: IDayInfo;
+  day!: IDay;
   get start() {
-    return this.day.start;
+    return this.day.Start;
   }
   get end() {
-    return this.day.end;
+    return this.day.End;
+  }
+  get today() {
+    let weekday = new Date(Date.now())
+      .toLocaleDateString('en-GB', {
+        weekday: 'short'
+      })
+      .toLocaleLowerCase();
+    let day = this.timetable!.Days.find((item) => {
+      return item.Day.toLocaleLowerCase() === weekday;
+    });
+    return day ?? this.timetable!.Days[0];
   }
   hour!: number;
+  get now() {
+    return Number(
+      new Date(Date.now()).toLocaleTimeString('en-GB', { hour: '2-digit' })
+    );
+  }
   time(hour: number, hours = 1) {
     let start = new Date(0),
       end = new Date(0);
@@ -64,14 +69,25 @@ export class MobileComponent {
       this.datePipe.transform(end, 'HH:mm')
     );
   }
-  setDay(day: IDayInfo) {
+  setDay(day: IDay, hour?: number) {
     this.day = day;
-    this.hour = day.start;
+    if (hour === undefined) {
+      this.hour = day.Start;
+    } else {
+      let now = this.toTime(hour),
+        start = this.toTime(this.today.Start),
+        end = this.toTime(this.today.End);
+      if (now >= start && now < end) this.hour = hour;
+      else this.hour = this.today.Start;
+    }
+  }
+  setNow() {
+    this.setDay(this.today, this.now);
   }
   areaId?: string;
   toTime(hour: number) {
     let time = new Date(0);
-    time.setHours(hour + (hour < this.day.start ? 24 : 0));
+    time.setHours(hour + (hour < this.day.Start ? 24 : 0));
     return time;
   }
   getItems(day: string, hour: number, areaId?: string) {
