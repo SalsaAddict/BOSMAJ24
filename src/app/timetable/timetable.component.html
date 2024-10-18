@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" *ngIf="timetable">
   <div class="text-center">
     <div class="btn-group">
       <ng-template ngFor let-item [ngForOf]="days" let-i="index">
@@ -23,7 +23,7 @@
     </div>
   </div>
   <br />
-  <table class="timetable" *ngIf="timetable">
+  <table class="timetable">
     <thead>
       <tr>
         <th style="width: 1px">Time</th>

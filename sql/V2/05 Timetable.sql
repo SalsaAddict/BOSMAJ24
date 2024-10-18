@@ -61,12 +61,13 @@ CREATE TABLE [Workshop] (
 	[LevelId] TINYINT NOT NULL,
 	[GenreId] NCHAR(1) NOT NULL,
 	CONSTRAINT [PK_Workshop] PRIMARY KEY ([Date], [Hour], [Act]),
-	CONSTRAINT [UQ_Workshop_Genre_Level] UNIQUE ([Date], [Hour], [GenreId], [LevelId]),
 	CONSTRAINT [FK_Workshop_Act] FOREIGN KEY ([Act]) REFERENCES [Act] ([Name]),
 	CONSTRAINT [FK_Workshop_Area] FOREIGN KEY ([AreaId]) REFERENCES [Area] ([Id]),
 	CONSTRAINT [FK_Workshop_Level] FOREIGN KEY ([LevelId]) REFERENCES [Level] ([Id]),
 	CONSTRAINT [FK_Workshop_Genre] FOREIGN KEY ([GenreId]) REFERENCES [Genre] ([Id])
 )
+GO
+CREATE UNIQUE INDEX [IX_Workshop_Genre_Level] ON [Workshop] ([Date], [Hour], [GenreId], [LevelId]) WHERE [LevelId] > 0
 GO
 CREATE VIEW [WorkshopsPerTeacher]
 WITH SCHEMABINDING

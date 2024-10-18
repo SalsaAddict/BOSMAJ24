@@ -35,3 +35,4 @@ sqlcmd -S $Server -d $Database -E -C -Q "EXEC [ExportTimetable]" -y 0 -o "../src
 sqlcmd -S $Server -d $Database -E -C -Q "EXEC [ExportTeachers]" -y 0 -o "teachers.json" -f 65001
 
 node encrypt.js
+node timetable.js
