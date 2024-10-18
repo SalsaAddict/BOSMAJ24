@@ -21,8 +21,8 @@ export type Categories = {
 
 export const Colors: Categories = {
   Bachata: [100, 255, 150],
-  Salsa: [140, 200, 255],
-  Other: [180, 100, 255],
+  Salsa: [50, 200, 255],
+  Other: [255, 130, 255],
   Party: [255, 220, 80],
   Performance: [255, 150, 127]
 };
