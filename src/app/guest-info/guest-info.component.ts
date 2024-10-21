@@ -6,7 +6,7 @@ import {
   FormControl
 } from '@angular/forms';
 import { IGuestInfo } from '../guest-info';
-import { CommonModule, TitleCasePipe } from '@angular/common';
+import { CommonModule, SlicePipe, TitleCasePipe } from '@angular/common';
 import { SystemService } from '../system.service';
 import { GuestDetailComponent } from '../guest-detail/guest-detail.component';
 
@@ -20,6 +20,7 @@ type ReviewType = 'All' | 'Question' | 'Problem' | 'Random';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    SlicePipe,
     TitleCasePipe,
     GuestDetailComponent
   ],

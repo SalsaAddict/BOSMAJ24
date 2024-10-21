@@ -1,124 +1,207 @@
 <div class="container-fluid">
-    <div class="container" [ngSwitch]="!searchForm.value.linkId">
-        <form [formGroup]="searchForm" *ngSwitchCase="true">
-            <div class="row text-nowrap">
-                <div class="btn-group col-3">
-                    <input type="radio" class="btn-check" formControlName="type" value="All" id="type0" />
-                    <label class="btn btn-outline-secondary" for="type0">
-                        All
-                        <span class="badge text-bg-secondary">{{total()}}</span>
-                    </label>
-                    <input type="radio" class="btn-check" formControlName="type" value="Staff" id="type1" />
-                    <label class="btn btn-outline-secondary" for="type1">
-                        Staff
-                        <span class="badge text-bg-secondary">{{total(true)}}</span>
-                    </label>
-                    <input type="radio" class="btn-check" formControlName="type" value="Guests" id="type2" />
-                    <label class="btn btn-outline-secondary" for="type2">
-                        Guests
-                        <span class="badge text-bg-secondary">{{total(false)}}</span>
-                    </label>
-                </div>
-                <div class="col-3">
-                    <div class="input-group">
-                        <input type="text" class="form-control" formControlName="name" placeholder="Search Name">
-                        <button type="button" class="btn btn-outline-secondary"
-                            (click)="searchForm.patchValue({name:''})">
-                            <i class="bi-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="input-group">
-                        <input type="text" class="form-control" formControlName="reference"
-                            placeholder="Search Reference">
-                        <button type="button" class="btn btn-outline-secondary"
-                            (click)="searchForm.patchValue({reference:''})">
-                            <i class="bi-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="btn-group col-3">
-                    <input type="radio" class="btn-check" formControlName="review" value="All" id="review0" />
-                    <label class="btn btn-outline-secondary" for="review0">All</label>
-                    <input type="radio" class="btn-check" formControlName="review" value="Question" id="review1" />
-                    <label class="btn btn-outline-secondary" for="review1">
-                        Question
-                        <i class="bi-question-octagon-fill text-warning"></i>
-                    </label>
-                    <input type="radio" class="btn-check" formControlName="review" value="Problem" id="review2" />
-                    <label class="btn btn-outline-secondary" for="review2">
-                        Problem
-                        <i class="bi-exclamation-triangle-fill text-danger"></i>
-                    </label>
-                    <input type="radio" class="btn-check" formControlName="review" value="Random" id="review3" />
-                    <label class="btn btn-outline-secondary" for="review3">
-                        Unconfirmed
-                        <i class="bi-question-diamond-fill text-primary"></i>
-                    </label>
-                </div>
-            </div>
-        </form>
-        <div *ngSwitchCase="false" class="text-center">
-            <button type="button" class="btn btn-secondary" (click)="unlink()">Show All</button>
+  <div class="container" [ngSwitch]="!searchForm.value.linkId">
+    <form [formGroup]="searchForm" *ngSwitchCase="true">
+      <div class="row text-nowrap">
+        <div class="btn-group col-3">
+          <input
+            type="radio"
+            class="btn-check"
+            formControlName="type"
+            value="All"
+            id="type0" />
+          <label class="btn btn-outline-secondary" for="type0">
+            All
+            <span class="badge text-bg-secondary">{{ total() }}</span>
+          </label>
+          <input
+            type="radio"
+            class="btn-check"
+            formControlName="type"
+            value="Staff"
+            id="type1" />
+          <label class="btn btn-outline-secondary" for="type1">
+            Staff
+            <span class="badge text-bg-secondary">{{ total(true) }}</span>
+          </label>
+          <input
+            type="radio"
+            class="btn-check"
+            formControlName="type"
+            value="Guests"
+            id="type2" />
+          <label class="btn btn-outline-secondary" for="type2">
+            Guests
+            <span class="badge text-bg-secondary">{{ total(false) }}</span>
+          </label>
         </div>
+        <div class="col-3">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="name"
+              placeholder="Search Name" />
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="searchForm.patchValue({ name: '' })">
+              <i class="bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="reference"
+              placeholder="Search Reference" />
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="searchForm.patchValue({ reference: '' })">
+              <i class="bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="btn-group col-3">
+          <input
+            type="radio"
+            class="btn-check"
+            formControlName="review"
+            value="All"
+            id="review0" />
+          <label class="btn btn-outline-secondary" for="review0">All</label>
+          <input
+            type="radio"
+            class="btn-check"
+            formControlName="review"
+            value="Question"
+            id="review1" />
+          <label class="btn btn-outline-secondary" for="review1">
+            Question
+            <i class="bi-question-octagon-fill text-warning"></i>
+          </label>
+          <input
+            type="radio"
+            class="btn-check"
+            formControlName="review"
+            value="Problem"
+            id="review2" />
+          <label class="btn btn-outline-secondary" for="review2">
+            Problem
+            <i class="bi-exclamation-triangle-fill text-danger"></i>
+          </label>
+          <input
+            type="radio"
+            class="btn-check"
+            formControlName="review"
+            value="Random"
+            id="review3" />
+          <label class="btn btn-outline-secondary" for="review3">
+            Unconfirmed
+            <i class="bi-question-diamond-fill text-primary"></i>
+          </label>
+        </div>
+      </div>
+    </form>
+    <div *ngSwitchCase="false" class="text-center">
+      <button type="button" class="btn btn-secondary" (click)="unlink()">
+        Show All
+      </button>
     </div>
-    <p [ngSwitch]="filtered" class="text-center text-uppercase text-muted small my-3">
-        {{count}} guests
-        <span *ngSwitchCase="true">(filtered)</span>
-        <span *ngSwitchCase="false">total</span>
-    </p>
-    <table class="table table-sm table-striped table-bordered text-nowrap align-middle">
-        <thead>
-            <th class="text-center">Id</th>
-            <th class="text-center">Staff</th>
-            <th>Guest Name</th>
-            <th>Ticket Number</th>
-            <th>Ticket Type</th>
-            <th>Dietary Requirements</th>
-            <th>Room Type</th>
-            <th>Configuration</th>
-            <th>Reservation</th>
-            <th colspan="3">Sharing With</th>
-        </thead>
-        <tbody>
-            <tr *ngFor="let guest of guests()">
-                <td class="text-center" style="width: 0;"><a [name]="guest.GuestId">{{guest.GuestId}}</a></td>
-                <td class="text-center" style="width: 0;" [ngSwitch]="guest.Staff">
-                    <i class="bi-person-fill" *ngSwitchCase="true"></i>
-                    <i class="bi-person text-muted" *ngSwitchCase="false"></i>
-                </td>
-                <td class="text-capitalize">{{guest.FullName | titlecase}}</td>
-                <td>{{guest.TicketId}}</td>
-                <td>{{guest.TicketType}}</td>
-                <td>
-                    <app-guest-detail [condition]="guest.DietaryInfoOk" [value]="guest.DietaryInfo"></app-guest-detail>
-                </td>
-                <td>
-                    <app-guest-detail [condition]="guest.RoomTypeOk" [value]="guest.RoomType"></app-guest-detail>
-                </td>
-                <td>
-                    <app-guest-detail [condition]="guest.RoomConfigOk" [value]="guest.RoomConfig"></app-guest-detail>
-                </td>
-                <td>
-                    <app-guest-detail [condition]="guest.ReservationOk" [value]="guest.Reservation"
-                        nullClass="bi-exclamation-triangle-fill text-warning"></app-guest-detail>
-                </td>
-                <td class="text-center" style="width: 0;" [ngSwitch]="guest.Confirmed">
-                    <i class="bi-check-circle text-success" *ngSwitchCase="true"></i>
-                    <i class="bi-question-diamond-fill text-primary" *ngSwitchCase="false"></i>
-                </td>
-                <td>
-                    <app-guest-detail [condition]="guest.SharingWithOk" [value]="guest.SharingWith"
-                        [normalize]="true"></app-guest-detail>
-                </td>
-                <td style="width: 0;">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" *ngIf="guest.SharingWithId"
-                        (click)="link(guest.SharingWithId)" [disabled]="searchForm.value.linkId">
-                        <i class="bi-people-fill"></i>
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+  </div>
+  <p
+    [ngSwitch]="filtered"
+    class="text-center text-uppercase text-muted small my-3">
+    {{ count }} guests
+    <span *ngSwitchCase="true">(filtered)</span>
+    <span *ngSwitchCase="false">total</span>
+  </p>
+  <table
+    class="table table-sm table-striped table-bordered text-nowrap align-middle">
+    <thead>
+      <th class="text-center">Id</th>
+      <th class="text-center">Staff</th>
+      <th>Guest Name</th>
+      <th>Ticket Number</th>
+      <th>Ticket Type</th>
+      <th class="text-center px-2">Arrive</th>
+      <th class="text-center px-2">Depart</th>
+      <th>Dietary Requirements</th>
+      <th>Room Type</th>
+      <th>Configuration</th>
+      <th>Reservation</th>
+      <th colspan="3">Sharing With</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let guest of guests()">
+        <td class="text-center" style="width: 0">
+          <a [name]="guest.GuestId">{{ guest.GuestId }}</a>
+        </td>
+        <td class="text-center" style="width: 0" [ngSwitch]="guest.Staff">
+          <i class="bi-person-fill" *ngSwitchCase="true"></i>
+          <i class="bi-person text-muted" *ngSwitchCase="false"></i>
+        </td>
+        <td class="text-capitalize">{{ guest.FullName | titlecase }}</td>
+        <td>{{ guest.TicketId }}</td>
+        <td>{{ guest.TicketType }}</td>
+        <td class="text-center">
+          <p class="m-0">{{ guest.CheckInDate | date : 'EEE' }}</p>
+          <p class="m-0" *ngIf="guest.FlightInTime">
+            {{ guest.FlightInTime | slice : 0 : 5 }}
+          </p>
+        </td>
+        <td class="text-center">
+          <p class="m-0">{{ guest.CheckOutDate | date : 'EEE' }}</p>
+          <p class="m-0" *ngIf="guest.FlightOutTime">
+            {{ guest.FlightOutTime | slice : 0 : 5 }}
+          </p>
+        </td>
+        <td>
+          <app-guest-detail
+            [condition]="guest.DietaryInfoOk"
+            [value]="guest.DietaryInfo"></app-guest-detail>
+        </td>
+        <td>
+          <app-guest-detail
+            [condition]="guest.RoomTypeOk"
+            [value]="guest.RoomType"></app-guest-detail>
+        </td>
+        <td>
+          <app-guest-detail
+            [condition]="guest.RoomConfigOk"
+            [value]="guest.RoomConfig"></app-guest-detail>
+        </td>
+        <td>
+          <app-guest-detail
+            [condition]="guest.ReservationOk"
+            [value]="guest.Reservation"
+            nullClass="bi-exclamation-triangle-fill text-warning"></app-guest-detail>
+        </td>
+        <td class="text-center" style="width: 0" [ngSwitch]="guest.Confirmed">
+          <i class="bi-check-circle text-success" *ngSwitchCase="true"></i>
+          <i
+            class="bi-question-diamond-fill text-primary"
+            *ngSwitchCase="false"></i>
+        </td>
+        <td>
+          <app-guest-detail
+            [condition]="guest.SharingWithOk"
+            [value]="guest.SharingWith"
+            [normalize]="true"></app-guest-detail>
+        </td>
+        <td style="width: 0">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary"
+            *ngIf="guest.SharingWithId"
+            (click)="link(guest.SharingWithId)"
+            [disabled]="searchForm.value.linkId">
+            <i class="bi-people-fill"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

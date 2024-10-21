@@ -28,6 +28,8 @@
       <thead>
         <tr>
           <th colspan="2">Teacher</th>
+          <th class="text-center">Arrive</th>
+          <th class="text-center">Depart</th>
           <th>Partner</th>
           <th colspan="2">Artist/Act</th>
           <th class="text-center" style="width: 0">Day</th>
@@ -54,6 +56,24 @@
             *ngIf="teacher.TeacherRow === 1">
             {{ teacher.Teacher }}
           </th>
+          <td
+            class="text-center"
+            [attr.rowspan]="teacher.TeacherRowSpan"
+            *ngIf="teacher.TeacherRow === 1">
+            <p class="m-0">{{ teacher.CheckInDate | date : 'EEE' }}</p>
+            <p class="m-0" *ngIf="teacher.FlightInTime">
+              {{ teacher.FlightInTime | slice : 0 : 5 }}
+            </p>
+          </td>
+          <td
+            class="text-center"
+            [attr.rowspan]="teacher.TeacherRowSpan"
+            *ngIf="teacher.TeacherRow === 1">
+            <p class="m-0">{{ teacher.CheckOutDate | date : 'EEE' }}</p>
+            <p class="m-0" *ngIf="teacher.FlightOutTime">
+              {{ teacher.FlightOutTime | slice : 0 : 5 }}
+            </p>
+          </td>
           <td
             [attr.rowspan]="teacher.ActRowSpan"
             *ngIf="teacher.ActRow === 1"

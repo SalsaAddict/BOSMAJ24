@@ -38,6 +38,10 @@ SELECT TOP 100 PERCENT
 			WHEN g2s.[Description] = rs.[Description] THEN NULL
 			ELSE 0
 		END),
+	[CheckInDate] = g.[CheckInDate],
+	[FlightInTime] = g.[FlightInTime],
+	[CheckOutDate] = g.[CheckOutDate],
+	[FlightOutTime] = g.[FlightOutTime],
 	[SharingWith] = g2.[FullName],
 	[SharingWithId] = g2.[Id],
 	[SharingWithOk] = CONVERT(BIT, CASE	WHEN rt.[Description] != N'Single Room' AND r.[GuestId2] IS NULL AND r.[Confirmed] = 0 THEN 0 ELSE 1 END),

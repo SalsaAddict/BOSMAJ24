@@ -137,6 +137,10 @@ BEGIN
 				[TeacherRow] = ROW_NUMBER() OVER (PARTITION BY tch.[FullName] ORDER BY act.[Name], w.[Date], w.[Hour], a.[Sort]),
 				[TeacherRowSpan] = COUNT(*) OVER (PARTITION BY tch.[FullName]),
 				[TeacherCount] = COUNT(w.[Act]) OVER (PARTITION BY tch.[FullName]),
+				[CheckInDate] = tch.[CheckInDate],
+				[FlightInTime] = tch.[FlightInTime],
+				[CheckOutDate] = tch.[CheckOutDate],
+				[FlightOutTime] = tch.[FlightOutTime],
 				[Act] = act.[Name],
 				[ActRow] = ROW_NUMBER() OVER (PARTITION BY tch.[FullName], act.[Name] ORDER BY w.[Date], w.[Hour], a.[Sort]),
 				[ActRowSpan] = COUNT(*) OVER (PARTITION BY tch.[FullName], act.[Name]),
@@ -161,7 +165,7 @@ BEGIN
 						JOIN [Genre] g ON w.[GenreId] = g.[Id]
 						CROSS APPLY (VALUES (DATEADD(hour, w.[Hour], CONVERT(SMALLDATETIME, w.[Date])))) dte ([When])
 					ON act.[Name] = w.[Act]
-			ORDER BY tch.[FullName], act.[Name], w.[Date], w.[Hour], a.[Sort]
+			ORDER BY tch.[FullName], tch.[CheckInDate], tch.[FlightInTime], tch.[CheckOutDate], tch.[FlightOutTime], act.[Name], w.[Date], w.[Hour], a.[Sort]
 			FOR JSON PATH
 		)
 	RETURN

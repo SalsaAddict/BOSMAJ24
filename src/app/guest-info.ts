@@ -11,6 +11,10 @@ export interface IGuestInfo {
   Booking: string;
   Reservation: string;
   ReservationOk?: boolean;
+  CheckInDate: Date;
+  FlightInTime: string;
+  CheckOutDate: Date;
+  FlightOutTime: string;
   SharingWith?: string;
   SharingWithId?: number;
   SharingWithOk?: boolean;
