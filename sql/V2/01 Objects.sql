@@ -327,6 +327,9 @@ BEGIN
 	SET [Guest_first_name] = N'Kally', [Guest_last_name] = N'Woodgate', [Sharing_info_1] = N'Dominic Pisano'
 	WHERE [Ticket_number] = N'2WJ6-Z9NB-81Q1P'
 
+	-- Deferred until next year
+	DELETE [WebSales] WHERE [Ticket_number] IN (N'2WF5-0QSG-CZX1P', N'2WF9-FXXG-7V81P')
+
 	INSERT INTO [Guest] ([TicketId], [Forename], [Surname], [CheckInDate], [CheckOutDate], [DietaryInfo], [Staff])
 	SELECT
 		s.[Ticket_number],
