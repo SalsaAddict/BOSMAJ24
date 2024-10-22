@@ -8,6 +8,12 @@ if (content.startsWith(UTF8_BOM)) {
 }
 let timetable = JSON.parse(content);
 
+timetable.Meals = [
+  { title: 'Breakfast', hour: 8, hours: 3 },
+  { title: 'Lunch', hour: 13, hours: 2 },
+  { title: 'Dinner', hour: 20, hours: 2 }
+];
+
 const activities = [
   {
     AreaId: 'P',
@@ -92,6 +98,12 @@ const activities = [
 timetable.Items.push(...activities);
 
 timetable.Days.forEach((day) => {
+  switch (day.Day) {
+    case 'Thu': day.Theme = 'Tropical'; break;
+    case 'Fri': day.Theme = 'Halloween'; break;
+    case 'Sat': day.Theme = 'Gala Night'; break;
+    case 'Sun': day.Theme = 'White Party'; break;
+  }
   let parties = [
     {
       Day: day.Day,
