@@ -15,9 +15,3 @@ WHERE [Id] NOT IN (
 		SELECT [GuestId2] FROM [Advent_PAH]..[Room] WHERE [GuestId2] IS NOT NULL
 	)
 ORDER BY s.[Coupon], g.[FullName]
-
---SELECT * FROM WebSales WHERE [Guest_name] LIKE N'%lola%'
---SELECT * FROM WebSales WHERE [Order_number] = N'2WQD-JT1M-34G'
---SELECT * FROM WebSales WHERE [Coupon] LIKE N'%Lau%'
-
-SELECT * FROM WebSales WHERE [Guest_first_name] = 'Beatrice'
