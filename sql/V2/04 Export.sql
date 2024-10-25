@@ -12,19 +12,22 @@ BEGIN
 						SELECT
 							[RoomType] = rt.[Description],
 							[Configuration] = rc.[Description],
-							[StaffThuMon] = COUNT(CASE WHEN r.[Staff] = 1 AND per.[Description] = N'Thu-Mon' THEN 1 ELSE NULL END),
-							[GuestsThuMon] = COUNT(CASE WHEN r.[Staff] = 0 AND per.[Description] = N'Thu-Mon' THEN 1 ELSE NULL END),
-							[StaffFriMon] = COUNT(CASE WHEN r.[Staff] = 1 AND per.[Description] = N'Fri-Mon' THEN 1 ELSE NULL END),
-							[GuestsFriMon] = COUNT(CASE WHEN r.[Staff] = 0 AND per.[Description] = N'Fri-Mon' THEN 1 ELSE NULL END),
-							[StaffSatMon] = COUNT(CASE WHEN r.[Staff] = 1 AND per.[Description] = N'Sat-Mon' THEN 1 ELSE NULL END),
-							[GuestsSatMon] = COUNT(CASE WHEN r.[Staff] = 0 AND per.[Description] = N'Sat-Mon' THEN 1 ELSE NULL END),
-							[Total] = COUNT(*)
+							[StaffThuMon] = COUNT(DISTINCT CASE WHEN r.[Staff] = 1 AND per.[Description] = N'Thu-Mon' THEN r.[RoomId] ELSE NULL END),
+							[GuestsThuMon] = COUNT(DISTINCT CASE WHEN r.[Staff] = 0 AND per.[Description] = N'Thu-Mon' THEN r.[RoomId] ELSE NULL END),
+							[StaffFriMon] = COUNT(DISTINCT CASE WHEN r.[Staff] = 1 AND per.[Description] = N'Fri-Mon' THEN r.[RoomId] ELSE NULL END),
+							[GuestsFriMon] = COUNT(DISTINCT CASE WHEN r.[Staff] = 0 AND per.[Description] = N'Fri-Mon' THEN r.[RoomId] ELSE NULL END),
+							[Total] = COUNT(DISTINCT r.[RoomId]),
+							[Guests] = COUNT(DISTINCT g.[Id])
 						FROM [Rooms] r
 							JOIN [RoomType] rt ON r.[RoomTypeId] = rt.[Id]
 							JOIN [RoomConfig] rc ON r.[RoomConfigId] = rc.[Id]
 							JOIN [Stay] per ON r.[CheckInDate] = per.[CheckInDate] AND r.[CheckOutDate] = per.[CheckOutDate]
+							JOIN [Guest] g ON g.[Id] IN (r.[GuestId1], r.[GuestId2])
 						GROUP BY rt.[Sort], rt.[Description], rc.[Sort], rc.[Description]
-						ORDER BY rt.[Sort], rc.[Sort]
+						WITH ROLLUP
+						HAVING GROUPING(rt.[Sort]) & GROUPING(rt.[Description]) & GROUPING(rc.[Sort]) & GROUPING(rc.[Description]) = 1
+							OR GROUPING(rt.[Sort]) | GROUPING(rt.[Description]) | GROUPING(rc.[Sort]) | GROUPING(rc.[Description]) = 0
+						ORDER BY GROUPING(rt.[Sort]), rt.[Sort], rc.[Sort]
 						FOR JSON PATH
 					),
 				[Allocations] = (
@@ -48,10 +51,13 @@ BEGIN
 																					SELECT
 																						[Forename] = g.[Forename],
 																						[Surname] = g.[Surname],
+																						[Stay] = gs.[Description],
+																						[StayOk] = CONVERT(BIT, CASE WHEN gs.[Description] = per.[Description] THEN 1 ELSE 0 END),
 																						[DietaryInfo] = g.[DietaryInfo],
 																						[Reference] = g.[TicketId],
 																						[Staff] = g.[Staff]
 																					FROM [Guest] g
+																						JOIN [Stay] gs ON g.[CheckInDate] = gs.[CheckInDate] AND g.[CheckOutDate] = gs.[CheckOutDate]
 																					WHERE g.[Id] IN (r.[GuestId1], r.[GuestId2])
 																					FOR JSON PATH
 																				)

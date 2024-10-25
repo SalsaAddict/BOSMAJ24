@@ -10,6 +10,7 @@ export interface ISummary {
   StaffFriMon: number;
   GuestsFriMon: number;
   Total: number;
+  Guests: number;
 }
 export interface IAllocation {
   GuestType: string;
@@ -36,6 +37,8 @@ export interface IRoom {
 export interface IGuest {
   Forename: string;
   Surname: string;
+  Stay: string;
+  StayOk: boolean;
   DietaryInfo?: string;
   Reference?: string;
 }

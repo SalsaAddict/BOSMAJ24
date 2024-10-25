@@ -1,94 +1,107 @@
 <div class="container" *ngIf="info">
-    <div class="text-center h3 mb-5">BOS Majorca 2024 - Room Allocations</div>
-    <div>
-        <table class="table table-bordered table-striped table-sm text-nowrap align-middle">
-            <thead>
+  <div class="text-center h3 mb-5">BOS Majorca 2024 - Room Allocations</div>
+  <div>
+    <table
+      class="table table-bordered table-striped table-sm text-nowrap align-middle">
+      <thead>
+        <tr class="table-primary">
+          <th rowspan="2">Room Type</th>
+          <th rowspan="2">Configuration</th>
+          <th colspan="2" class="text-center">Thu&ndash;Mon</th>
+          <th colspan="2" class="text-center">Fri&ndash;Mon</th>
+          <th rowspan="2" class="text-center">Total<br />Rooms</th>
+          <th rowspan="2" class="text-center">Total<br />Occupants</th>
+        </tr>
+        <tr class="table-primary">
+          <th class="text-center">Artist<br />Rooms</th>
+          <th class="text-center">Guest<br />Rooms</th>
+          <th class="text-center">Artist<br />Rooms</th>
+          <th class="text-center">Guest<br />Rooms</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let summary of info.Summary" [class.h5]="!summary.RoomType">
+          <td>{{ summary.RoomType || 'Total' }}</td>
+          <td>{{ summary.Configuration }}</td>
+          <td class="text-center">{{ summary.StaffThuMon }}</td>
+          <td class="text-center">{{ summary.GuestsThuMon }}</td>
+          <td class="text-center">{{ summary.StaffFriMon }}</td>
+          <td class="text-center">{{ summary.GuestsFriMon }}</td>
+          <th class="text-center">{{ summary.Total }}</th>
+          <th class="text-center">{{ summary.Guests }}</th>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+  </div>
+  <div *ngFor="let allocation of info.Allocations">
+    <div *ngFor="let stay of allocation.Stays">
+      <div *ngFor="let roomType of stay.RoomTypes">
+        <div *ngFor="let configuration of roomType.Configurations">
+          <div *ngIf="configuration.Rooms?.length">
+            <table
+              class="table table-bordered table-striped table-sm text-nowrap align-middle">
+              <thead>
                 <tr class="table-primary">
-                    <th rowspan="2">Room Type</th>
-                    <th rowspan="2">Configuration</th>
-                    <th colspan="2" class="text-center">Thu&ndash;Mon</th>
-                    <th colspan="2" class="text-center">Fri&ndash;Mon</th>
-                    <th rowspan="2" class="text-center">Total</th>
+                  <th class="h4" colspan="6">{{ allocation.GuestType }}</th>
                 </tr>
                 <tr class="table-primary">
-                    <th class="text-center">Artist<br>Rooms</th>
-                    <th class="text-center">Guest<br>Rooms</th>
-                    <th class="text-center">Artist<br>Rooms</th>
-                    <th class="text-center">Guest<br>Rooms</th>
+                  <th class="h3" colspan="6">
+                    <span>{{ roomType.RoomType }}</span>
+                    <span>&nbsp;&bullet;&nbsp;</span>
+                    <span>{{ configuration.Configuration }}</span>
+                    <span>&nbsp;&bullet;&nbsp;</span>
+                    <span>{{ stay.Stay }} ({{ stay.Nights }} Nights)</span>
+                  </th>
                 </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let summary of info.Summary">
-                    <td>{{summary.RoomType}}</td>
-                    <td>{{summary.Configuration}}</td>
-                    <td class="text-center">{{summary.StaffThuMon}}</td>
-                    <td class="text-center">{{summary.GuestsThuMon}}</td>
-                    <td class="text-center">{{summary.StaffFriMon}}</td>
-                    <td class="text-center">{{summary.GuestsFriMon}}</td>
-                    <th class="text-center">{{summary.Total}}</th>
+                <tr>
+                  <th class="text-center">#</th>
+                  <th>Forename</th>
+                  <th>Surname</th>
+                  <th>Stay</th>
+                  <th>Dietary Requirements</th>
+                  <th>Reference</th>
                 </tr>
-            </tbody>
-        </table>
-        <br>
-    </div>
-    <div *ngFor="let allocation of info.Allocations">
-        <div *ngFor="let stay of allocation.Stays">
-            <div *ngFor="let roomType of stay.RoomTypes">
-                <div *ngFor="let configuration of roomType.Configurations">
-                    <div *ngIf="configuration.Rooms?.length">
-                        <table class="table table-bordered table-striped table-sm text-nowrap align-middle">
-                            <thead>
-                                <tr class="table-primary">
-                                    <th class="h4" colspan="5">{{allocation.GuestType}}</th>
-                                </tr>
-                                <tr class="table-primary">
-                                    <th class="h3" colspan="5">
-                                        <span>{{roomType.RoomType}}</span>
-                                        <span>&nbsp;&bullet;&nbsp;</span>
-                                        <span>{{configuration.Configuration}}</span>
-                                        <span>&nbsp;&bullet;&nbsp;</span>
-                                        <span>{{stay.Stay}} ({{stay.Nights}} Nights)</span>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th class="text-center">#</th>
-                                    <th>Forename</th>
-                                    <th>Surname</th>
-                                    <th>Dietary Requirements</th>
-                                    <th>Reference</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let room of configuration.Rooms; let i=index;">
-                                    <th class="text-center">{{i + 1}}</th>
-                                    <td>
-                                        <p class="m-0" *ngFor="let guest of room.Guests">
-                                            <app-name [text]="guest.Forename"></app-name>
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <p class="m-0" *ngFor="let guest of room.Guests">
-                                            <app-name [text]="guest.Surname"></app-name>
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <p class="m-0" *ngFor="let guest of room.Guests">{{guest.DietaryInfo ||
-                                            '&ndash;'}}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <p class="m-0" *ngFor="let guest of room.Guests">{{guest.Reference ||
-                                            '&ndash;'}}
-                                        </p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <br>
-                    </div>
-                </div>
-            </div>
+              </thead>
+              <tbody>
+                <tr *ngFor="let room of configuration.Rooms; let i = index">
+                  <th class="text-center">{{ i + 1 }}</th>
+                  <td>
+                    <p class="m-0" *ngFor="let guest of room.Guests">
+                      <app-name [text]="guest.Forename"></app-name>
+                    </p>
+                  </td>
+                  <td>
+                    <p class="m-0" *ngFor="let guest of room.Guests">
+                      <app-name [text]="guest.Surname"></app-name>
+                    </p>
+                  </td>
+                  <td>
+                    <p
+                      class="m-0"
+                      *ngFor="let guest of room.Guests"
+                      [class.text-danger]="!guest.StayOk">
+                      <app-name [text]="guest.Stay"></app-name>
+                    </p>
+                  </td>
+                  <td>
+                    <p class="m-0" *ngFor="let guest of room.Guests">
+                      {{ guest.DietaryInfo || '&ndash;' }}
+                    </p>
+                  </td>
+                  <td>
+                    <p class="m-0" *ngFor="let guest of room.Guests">
+                      {{ guest.Reference || '&ndash;' }}
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <br />
+          </div>
         </div>
+      </div>
     </div>
-    <p class="text-muted text-uppercase text-center">End of Report</p>
+  </div>
+  <p class="text-muted text-uppercase text-center">End of Report</p>
 </div>
