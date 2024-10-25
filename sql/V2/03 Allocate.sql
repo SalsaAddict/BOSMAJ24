@@ -33,6 +33,7 @@ BEGIN
 				JOIN [WebSales] s ON c.[Order_number] = s.[Order_number]
 				JOIN [Guest] g ON s.[Ticket_number] = g.[TicketId]
 			WHERE c.[Ticket_type] LIKE N'SINGLE ROOM: %'
+				AND NOT s.[Ticket_number] = N'2W8X-JQ33-7321P' -- Esme Roberts
 			-- ***** 2 GUESTS ON SAME BOOKING ****
 			UNION ALL
 			SELECT

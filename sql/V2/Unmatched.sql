@@ -18,3 +18,6 @@ ORDER BY s.[Coupon], g.[FullName]
 
 --SELECT * FROM WebSales WHERE [Guest_name] LIKE N'%lola%'
 --SELECT * FROM WebSales WHERE [Order_number] = N'2WQD-JT1M-34G'
+--SELECT * FROM WebSales WHERE [Coupon] LIKE N'%Lau%'
+
+SELECT * FROM WebSales WHERE [Guest_first_name] = 'Beatrice'
